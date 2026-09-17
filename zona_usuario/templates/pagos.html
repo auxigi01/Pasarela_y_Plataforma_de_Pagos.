@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/recibo_de_pago.css')}}">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrador</title>
+    <link rel="icon" href="{{ url_for('static', filename='img/logo_rojo_rescarven.png') }}" type="image/png"
+</head>
+<body data-periodo="{{ periodo }}" data-fecha-inicio="{{ fecha_inicio }}" data-fecha-fin="{{ fecha_fin }}">
+    <div class="content">
+        <div class="sidebar">
+            <div class="logo">
+                <div class="menu-hamburguesa-container">
+                    <div class="menu-hamburguesa">&#9776;</div>
+                </div>
+                <img src="{{ url_for('static', filename='img/logo_rescarven.png') }}" alt="Logo" style="width:210px; height: 200px">
+            </div>
+            <nav class="menu">
+                <ul>
+                    <div class="panel">
+                        <ul>
+                                <li class="active"><a href="{{ url_for('pagomovil') }}">Pagos aprobados</a></li>
+                        </ul>
+                    </div>   
+                </ul>
+            </nav>
+        </div>
+        <div class="container">
+            <div class="main-content">
+                <header class="top-bar">
+                    <div class="cerrar-sesion-contenedor">
+                        <img src="{{ url_for('static', filename='img/cerrar_sesion.png') }}" class="cerrar_sesion" alt="Cerrar sesión">
+                        <a id="salir" name="salir" class="salir" href="{{ url_for('logout') }}" oncontextmenu="return false;">Cerrar sesión</a>
+                    </div> 
+    
+                <div class="user-icon">
+                    <div class="dropdown">
+                        <div class="menu-button" onclick="toggleDropdown()">
+                            <img src="{{ url_for('static', filename='img/usuario.png') }}" alt="Usuario">
+                        </div>
+                        <div class="dropdown-content" id="dropdown-menu">
+                            <div class="user-name"><p>Administrador</p></div>
+                            
+                        </div>
+                    </div>
+                </div>
+                </header>
+                <div class="contenido">
+                    <div class="arriba">
+                        <h1>Historial de pagos</h1>
+                        <!-- From Uiverse.io by LightAndy1 --> 
+                        <div class="input-wrapper">
+                            <div class="group">
+                                <svg viewBox="0 0 24 24" aria-hidden="true" class="search-icon">
+                                    <g>
+                                        <path
+                                            d="M21.53 20.47l-3.66-3.66C19.195 15.24 20 13.214 20 11c0-4.97-4.03-9-9-9s-9 4.03-9 9 4.03 9 9 9c2.215 0 4.24-.804 5.808-2.13l3.66 3.66c.147.146.34.22.53.22s.385-.073.53-.22c.295-.293.295-.767.002-1.06zM3.5 11c0-4.135 3.365-7.5 7.5-7.5s7.5 3.365 7.5 7.5-3.365 7.5-7.5 7.5-7.5-3.365-7.5-7.5z"
+                                        ></path>
+                                    </g>
+                                </svg>
+                                <input maxlength="15" id="input-search" class="input" type="search"
+                                       placeholder="Buscar Referencia"
+                                       name="searchbar" />
+                            </div>
+                        </div>   
+                    </div>
+
+                                <!-- Contenedor principal para organizar los elementos en fila -->
+            <div class="caja_fecha">
+                <!-- Botones para alternar entre las búsquedas -->
+                <div class="botones">
+                    <button class="periodo" type="button" onclick="mostrarBusqueda('periodo')">Buscar por Período</button>
+                    <button class="rango" type="button" onclick="mostrarBusqueda('rango')">Buscar por Rango de Fechas</button>
+                </div>
+
+                <!-- Contenedor de los formularios en una fila -->
+                <div class="formularios">
+                    <!-- Formulario de búsqueda por período -->
+                    <form id="form-periodo" method="GET" action="{{ url_for('pagomovil') }}">
+                        <select id="periodo" name="periodo">
+                            <option value="hoy">Hoy</option>
+                            <option value="ultima_semana">Última Semana</option>
+                            <option value="mes">Mes</option>
+                            <option value="tres_meses">Últimos Tres Meses</option>
+                        </select>
+                        <button type="submit" class="btn-buscar">Buscar</button>
+                    </form>
+                    
+                    <!-- Formulario de búsqueda por rango de fechas -->
+                    <form id="form-rango" method="GET" action="{{ url_for('pagomovil') }}" style="display: none;">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                        <input type="date" id="fecha_inicio" name="fecha_inicio" required>
+                        <input type="date" id="fecha_fin" name="fecha_fin" required>
+                        <button type="submit" class="btn-buscar">Buscar</button>
+                    </form>
+                </div>
+            </div>
+
+                    <div id="stabla-container">
+                        <div id="stabla">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Nombre del pagador</th>
+                                        <th>Telefono</th>
+                                        <th>Contrato</th>
+                                        <th>Compañía</th>
+                                        <th>Fecha de pago</th>
+                                        <th>Monto</th>
+                                        <th>Referencia</th>
+                                        <th><i class='bx bxl-gmail'></i></th>
+                                    </tr>
+                                </thead>
+                                <tr id="noResultados" style="display: none;">
+                                    <center><td colspan="8">No se encontraron resultados</td></center>
+                                </tr>                                
+                                <tbody id="tablaBody">
+                                    {% for recibo in recibos %}
+                                        <tr data-periodo="{{ recibo.periodo }}" data-fecha="{{ recibo.fecha_pago }}" style="display: none;">
+                                            <td class="datos">{{ recibo.nombre_pagador }}</td>
+                                            <td class="datos">{{ recibo.telefono_utilizado }}</td>
+                                            <td class="datos">{{ recibo.nro_contrato }}</td>
+                                            <td class="datos">{{ recibo.compania }}</td>
+                                            <td class="datos" data-fecha>{{ recibo.fecha_pago }}</td>
+                                            <td class="datos" data-monto>{{ recibo.monto_pagado }}</td>
+                                            <td class="datos" data-referencia>{{ recibo.referencia_pago }}</td>
+
+                                            <td class="datos" style="display: none;">{{ recibo.cuotas_pagadas }}</td>
+                                            <td class="datos" style="display: none;" data-monto>{{ recibo.total_pagado }}</td>
+                                            <td class="datos" style="display: none;">{{ recibo.hora_pago }}</td>
+                                            <td class="datos" style="display: none;">{{ recibo.banco_emisor }}</td>
+                                            <td class="datos" style="display: none;">{{ recibo.correo }}</td>
+
+                                            <!-- Columna oculta con el correo -->
+                                            <td class="datos" style="display: none;" id="correo_pagador_{{ loop.index }}">{{ recibo.correo }}</td>
+                                            <td class="datos" title="Enviar recibo por correo">
+                                                <button onclick="enviarRecibo({{loop.index}})" style="background-color: transparent; border: none; cursor: pointer;">
+                                                    <i class='bx bxl-gmail' style="color: red;"></i>
+                                                </button>
+                                                
+                                            
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>                                
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                    
+
+    <div id="session-expired-modal">
+        <div id="session-expired-content">
+            <p id="session-expired-message">Tu tiempo de sesión ha expirado. ¿Quieres extenderla?</p>
+            <div id="session-expired-buttons">
+                <button class="session-button" onclick="extendSession()">Extender Sesión</button>
+                <button id="logout-button" class="session-button" onclick="logout()">Cerrar Sesión</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{url_for('static', filename='js/menuspago.js')}}"></script>    
+    <script src="{{url_for('static', filename='js/icusuario.js')}}"></script> 
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelectorAll("td[data-fecha]").forEach(td => {
+                let fechaStr = td.innerText.trim();
+                if (fechaStr) {
+                    let [year, month, day] = fechaStr.split("-");
+                    let fecha = new Date(year, month - 1, day); // <-- Este sí respeta la fecha
+                    td.innerText = fecha.toLocaleDateString("es-VE"); // Formato DD/MM/AAAA
+                }
+            });
+    
+            document.querySelectorAll("td[data-monto]").forEach(td => {
+                let monto = parseFloat(td.innerText.replace(",", "."));
+                if (!isNaN(monto)) {
+                    td.innerText = monto.toLocaleString("es-VE", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    });
+                }
+            });
+        });
+    </script>
+    
+    <script>
+        function enviarRecibo(index) {
+            const fila = document.querySelector(`#tablaBody tr:nth-child(${index})`);
+    
+            const datos = {
+                nombre_pagador: fila.querySelector('td:nth-child(1)').textContent,
+                telefono_utilizado: fila.querySelector('td:nth-child(2)').textContent,
+                nro_contrato: fila.querySelector('td:nth-child(3)').textContent,
+                compania: fila.querySelector('td:nth-child(4)').textContent,
+                fecha_pago: fila.querySelector('td:nth-child(5)').textContent,
+                monto_pagado: fila.querySelector('td:nth-child(6)').textContent,
+                referencia_pago: fila.querySelector('td:nth-child(7)').textContent,
+                cuotas_pagadas: fila.querySelector('td:nth-child(8)').textContent,
+                total_pagado: fila.querySelector('td:nth-child(9)').textContent,
+                hora_pago: fila.querySelector('td:nth-child(10)').textContent,
+                banco_emisor: fila.querySelector('td:nth-child(11)').textContent,
+                correo_pagador: fila.querySelector(`#correo_pagador_${index}`).textContent
+            };
+    
+            // 🔹 Mostrar mensaje de "Enviando recibo..."
+            mostrarMensajeFlash("El recibo se está enviando...", "info");
+
+            const csrfToken = document
+            .querySelector('meta[name="csrf-token"]')
+            .getAttribute("content");
+    
+            fetch('/enviar_recibo', {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                body: JSON.stringify(datos)
+            })
+            .then(response => response.json())
+            .then(data => {
+                mostrarMensajeFlash(data.message, data.status); // Mostrar mensaje de éxito o error
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                mostrarMensajeFlash("Error al enviar el recibo.", "error"); // Si ocurre un error inesperado
+            });
+        }
+    
+        function mostrarMensajeFlash(mensaje, tipo) {
+            let flashContainer = document.getElementById("flash-container");
+    
+            if (!flashContainer) {
+                flashContainer = document.createElement("div");
+                flashContainer.id = "flash-container";
+                flashContainer.style.position = "fixed";
+                flashContainer.style.top = "10px";
+                flashContainer.style.left = "50%";
+                flashContainer.style.transform = "translateX(-50%)";
+                flashContainer.style.zIndex = "1000";
+                document.body.appendChild(flashContainer);
+            }
+    
+            let flashDiv = document.createElement("div");
+            flashDiv.className = `alert alert-${tipo}`;
+            flashDiv.textContent = mensaje;
+            flashDiv.style.padding = "10px 20px";
+            flashDiv.style.margin = "5px";
+            flashDiv.style.borderRadius = "5px";
+            flashDiv.style.color = "#fff";
+            flashDiv.style.fontWeight = "bold";
+    
+            if (tipo === "success") {
+                flashDiv.style.backgroundColor = "#28a745"; // Verde
+            } else if (tipo === "error") {
+                flashDiv.style.backgroundColor = "#dc3545"; // Rojo
+            } else {
+                flashDiv.style.backgroundColor = "#007bff"; // Azul
+            }
+    
+            flashContainer.appendChild(flashDiv);
+    
+            setTimeout(() => {
+                flashDiv.remove();
+            }, 3000);
+        }
+    </script>        
+        
+        <script>
+            document.getElementById("input-search").addEventListener("input", onInputChange);
+    
+                function onInputChange() {
+            const input = document.getElementById("input-search");
+            const filter = input.value.toUpperCase();
+            const filas = document.querySelectorAll("#tablaBody tr");
+            const noResultados = document.getElementById("noResultados");
+            let hayCoincidencias = false;
+    
+            if (filter.trim() === "") {
+                filas.forEach(fila => fila.style.display = "none");
+                noResultados.style.display = "table-row";
+                return;
+            }
+    
+            filas.forEach(fila => {
+                const celdaReferencia = fila.querySelector('[data-referencia]');
+                const texto = celdaReferencia?.textContent || "";
+                const coincide = texto.toUpperCase().includes(filter);
+    
+                fila.style.display = coincide ? "table-row" : "none";
+                if (coincide) hayCoincidencias = true;
+            });
+    
+            noResultados.style.display = hayCoincidencias ? "none" : "table-row";
+        }
+            
+            // Ocultar todas las filas al cargar la página
+            window.onload = function() {
+                let filas = document.querySelectorAll("#tablaBody tr");
+                let noResultados = document.getElementById("noResultados");
+            
+                filas.forEach(fila => fila.style.display = "none");
+                noResultados.style.display = "none"; // Asegurar que el mensaje también está oculto
+            };
+                   
+        </script>  
+
+    <script>
+        function mostrarBusqueda(tipo) {
+            if (tipo === 'periodo') {
+                document.getElementById('form-periodo').style.display = 'block';
+                document.getElementById('form-rango').style.display = 'none';
+            } else if (tipo === 'rango') {
+                document.getElementById('form-periodo').style.display = 'none';
+                document.getElementById('form-rango').style.display = 'block';
+            }
+        }
+    
+        function ocultarFilasTabla() {
+            const filas = document.querySelectorAll("#tablaBody tr");
+            filas.forEach(fila => fila.style.display = "none");
+        }
+    
+        function mostrarResultados(periodo, fechaInicio, fechaFin) {
+            const filas = document.querySelectorAll("#tablaBody tr");
+            let hayResultados = false;
+    
+            filas.forEach(fila => {
+                const dataPeriodo = fila.getAttribute("data-periodo");
+                const dataFecha = fila.getAttribute("data-fecha");
+    
+                let mostrar = false;
+    
+                // Si el backend ya filtró por período, solo mostramos las filas recibidas
+                if (periodo) {
+                    mostrar = true;
+                } 
+                // Si la búsqueda es por rango de fechas, comparamos en JS
+                else if (fechaInicio && fechaFin && dataFecha) {
+                    const fechaFila = new Date(dataFecha);
+                    const inicio = new Date(fechaInicio);
+                    const fin = new Date(fechaFin);
+                    fin.setHours(23, 59, 59, 999); // Incluir toda la fecha
+    
+                    if (fechaFila >= inicio && fechaFila <= fin) {
+                        mostrar = true;
+                    }
+                }
+    
+                if (mostrar) {
+                    fila.style.display = "table-row";
+                    hayResultados = true;
+                } else {
+                    fila.style.display = "none";
+                }
+            });
+    
+            // Mostrar mensaje si no hay resultados
+            document.getElementById('noResultados').style.display = hayResultados ? 'none' : 'table-row';
+        }
+    
+        function mantenerBusqueda() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const periodo = urlParams.get('periodo');
+            const fechaInicio = urlParams.get('fecha_inicio');
+            const fechaFin = urlParams.get('fecha_fin');
+    
+            ocultarFilasTabla(); // Oculta todas las filas al inicio
+    
+            if (periodo) {
+                mostrarBusqueda('periodo');
+            } else if (fechaInicio && fechaFin) {
+                mostrarBusqueda('rango');
+            }
+    
+            mostrarResultados(periodo, fechaInicio, fechaFin);
+        }
+    
+        window.onload = mantenerBusqueda;
+    </script>
+    
+
+ <meta name="csrf-token" content="{{ csrf_token() }}">
+</body>
+</html>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/cambiar_contrasena.css')}}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cambiar Contraseña</title>
+    <link rel="icon" href="{{ url_for('static', filename='img/logo_rojo_rescarven.png') }}" type="image/png">
+</head>
+<body>
+    <div class="content">
+        <div class="sidebar">
+            <div class="logo">
+                <div class="menu-hamburguesa-container">
+                    <div class="menu-hamburguesa">&#9776;</div>
+                </div>
+                <img src="{{ url_for('static', filename='img/logo_rescarven.png') }}" alt="Logo" style="width:210px; height: 200px">
+            </div>
+            <nav class="menu">
+                <ul>
+                    <li><a href="{{url_for('paginaprincipal')}}">Inicio</a></li>
+                    <li><a href="{{url_for('info_planes') }}">Planes</a></li>   
+                    <li><a href="{{url_for('recibo_de_pago')}}">Consultas</a></li>
+
+                </ul>
+            </nav>
+        </div>  
+        <div class="container">
+            <div class="main-content">
+                <header class="top-bar">
+                    <div class="cerrar-sesion-contenedor">
+                        <img src="{{ url_for('static', filename='img/cerrar_sesion.png') }}" class="cerrar_sesion" alt="Cerrar sesión">
+                        <a id="salir" name="salir" class="salir" href="{{ url_for('logout') }}" oncontextmenu="return false;">Cerrar sesión</a>
+                    </div>
+                    
+                    <div class="user-icon">
+                        <div class="dropdown">
+                            <div class="menu-button" onclick="toggleDropdown()">
+                                <img src="{{ url_for('static', filename='img/usuario.png') }}" alt="Usuario">
+                            </div>
+                            <div class="dropdown-content" id="dropdown-menu">
+                                <div class="user-name">{{ nombre }} {{ apellido }}</div>
+                                <a href="#">Cambiar Contraseña</a>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+                <div class="contenido">
+                    <div class="cambiar_contraseña_contenedor">
+                    <h1>Cambiar contraseña</h1>
+                    <img src="{{ url_for('static', filename='img/ccontrasena.png') }}" id='ccontraseña'>
+                </div>
+
+                    <form method="POST" action="{{ url_for('cambiar_contraseña') }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <div class="form-group">
+                            <input type="password" class="form-control" id="old_password" name="old_password" placeholder="" maxlength="64" minlength="12" required>
+                            <label for="old_password">Contraseña actual</label>
+                            <img src="{{ url_for('static', filename='img/ver.png') }}" alt="ver" class="ver" data-target="old_password">
+                        </div>
+                        <div class="form-group">
+                            <input type="password" class="form-control" id="new_password" name="new_password" placeholder="" maxlength="64" minlength="12" required>
+                            <label for="new_password">Nueva contraseña</label>
+                            <img src="{{ url_for('static', filename='img/ver.png') }}" alt="ver" class="ver" data-target="new_password">
+                            <small id="passwordHelp" class="form-text text-muted" style="display: none;">Min 12 y Max 64 caracteres</small>
+                        </div>
+                        <div class="form-group">
+                            <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="" maxlength="64" minlength="12" required>
+                            <label for="confirm_password">Confirmar contraseña</label>
+                            <img src="{{ url_for('static', filename='img/ver.png') }}" alt="ver" class="ver" data-target="confirm_password">
+                            <small id="matchHelp" class="form-text text-muted" style="display: none;">Las contraseñas no coinciden</small>
+                        </div>
+                        <button type="submit" class="btn-btn-primary">Aceptar</button>
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                        <div class="alert-container">
+                            {% for category, message in messages %}
+                                {% if category in ['danger', 'success'] %}
+                                    <div class="alert alert-{{ category }}">
+                                        {% if category == 'danger' %}
+                                            <img src="{{ url_for('static', filename='img/icerror.png') }}" alt="Error Icon">
+                                        {% elif category == 'success' %}
+                                            <img src="{{ url_for('static', filename='img/iccorrecto.png') }}" alt="Success Icon">
+                                        {% endif %}
+                                        <span>{{ message }}</span>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    {% endwith %}
+                </form>
+                </div>
+        </div>
+    </div>
+    <div id="session-expired-modal">
+        <div id="session-expired-content">
+            <p id="session-expired-message">Tu tiempo de sesión ha expirado. ¿Quieres extenderla?</p>
+            <div id="session-expired-buttons">
+                <button class="session-button" onclick="extendSession()">Extender Sesión</button>
+                <button id="logout-button" class="session-button" onclick="logout()">Cerrar Sesión</button>
+            </div>
+        </div>
+    </div>    
+    <script src="{{url_for('static', filename='js/cambiar_contrasena.js')}}"></script>
+    <script src="{{url_for('static', filename='js/icusuario.js')}}"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Encuentra todos los contenedores de alertas
+            const alertContainers = document.querySelectorAll(".alert-container");
+            // Itera sobre cada contenedor y establece un temporizador para ocultarlos
+            alertContainers.forEach(container => {
+                setTimeout(() => {
+                    container.style.opacity = "0"; // Desvanece la alerta
+                    setTimeout(() => {
+                        container.remove();
+                    }, 1000); // Tiempo de espera para que termine la animación
+                }, 5000); // Espera 5 segundos antes de comenzar el desvanecimiento
+            });
+        });
+    </script>
+</body>
+</html>
+
+
+    
+
+      

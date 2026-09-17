@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/registrarse.css')}}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>Registro</title>
+    <link rel="icon" href="{{ url_for('static', filename='img/logo_rojo_rescarven.png') }}" type="image/png">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.3/css/bootstrap.min.css">
+</head>
+<body>
+    <header>
+        <div class="container__menu">
+            <div class="logo">
+                <img src="{{ url_for('static', filename='img/logo_blanco.png') }}" style=" height: 100px;">
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('inicio')}}"  class="usuario" ><strong>Ingresar</strong></a></li>
+                    <li><a href="{{ url_for('registro')}}" id="selected" class="salir"><strong>Registrar</strong></a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+<div class="form-container">
+    <form action="{{ url_for('registro') }}" method="post" name="formulario_registro">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+        <h2>¡REGISTRESE AHORA!</h2>  
+
+        <div class="form-group">
+            <input required="" type="email" name="email" placeholder=" " class="email_login" id="email_login" maxlength="40">
+            <label class="email-label">CORREO ELECTRÓNICO</label>
+          </div>
+
+
+        <div class="form-group">
+        <div class="input-container">
+            <select id="tipo_documento" name="tipo_documento" class="ci" required>
+                <option value="V">V</option>
+                <option value="J">J</option>
+                <option value="E">E</option>
+                <option value="P">P</option>
+            </select>
+    
+            <input required type="text" name="ci_login" placeholder=" " class="ci_login" id="ci_login" maxlength="15" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+            <label class="ci-label">NÚMERO DE IDENTIDAD</label><br>
+        </div>
+    </div>
+  
+    
+    <div class="form-group"> 
+        <input type="password" class="password_login" id="password" name="password" maxlength="64" minlength="12" placeholder=" " required>
+        <label class="password-label">CONTRASEÑA</label>
+        <img src="{{ url_for('static', filename='img/ver.png') }}" alt="ver" class="ver" id="ver">
+        <small id="passwordHelp" class="form-text text-muted" style="display: none;">Min 12 y Max 64 caracteres</small>
+
+    </div>
+
+    <div class="form-group">
+        <input type="password"  name="confirm_password" placeholder=" " class="password_login_recu" id="confirm_password" maxlength="64" minlength="12"  required>
+        <label class="password-label-recu">CONFIRMAR CONTRASEÑA</label>
+        <img src="{{ url_for('static', filename='img/ver.png') }}" id='ver2' alt="ver2" class="ver2">
+        <small id="matchHelp" class="form-text text-muted" style="display: none;">Las contraseñas no coinciden</small>
+    </div>
+    
+    <!-- CAPTCHA -->
+    <div class="form-group">
+        
+        <img src="{{ url_for('static', filename=captcha_path) }}?v={{ version }}" alt="CAPTCHA" id="captcha_img"><br>
+        <input type="text"  name="captcha" placeholder=" " class="captcha_login" id="captcha" required>
+        <label class="captcha_label">INGRESE EL TEXTO DEL CAPTCHA</label>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Registrarse</button>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    
+    <div class="alert-container">
+            {% for category, message in messages %}
+                {% if category in ['register_error'] %}
+                    <div class="alert alert-{{ category }}">
+                        <img src="{{ url_for('static', filename='img/icerror.png') }}" alt="Error Icon">
+                        <span>{{ message }}</span>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% endwith %}
+</form>
+
+</div>
+<script src="{{url_for('static', filename='js/registrarse.js')}}"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Encuentra todos los contenedores de alertas
+        const alertContainers = document.querySelectorAll(".alert-container");
+
+        // Itera sobre cada contenedor y establece un temporizador para ocultarlos
+        alertContainers.forEach(container => {
+            setTimeout(() => {
+                container.style.opacity = "0"; // Desvanece la alerta
+                // Elimina el contenedor del DOM después de la transición
+                setTimeout(() => {
+                    container.remove();
+                }, 1000); // Tiempo de espera para que termine la animación
+            }, 5000); // Espera 5 segundos antes de comenzar el desvanecimiento
+        });
+    });
+</script>
+</body>
+</html>
+  

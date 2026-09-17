@@ -1,0 +1,28 @@
+# Entornos virtuales
+venv/
+env/
+ENV/
+
+# Variables de entorno y credenciales (¡Muy importante!)
+.env
+
+# Caché de Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Bases de datos locales de desarrollo (si usas SQLite u otras locales)
+*.db
+*.sqlite3
+
+# Editores de código (como VS Code)
+.vscode/
+.idea/
+
+#png
+*.png
+#jpg
+*.jpg
+
+#pdf
+*.pdf

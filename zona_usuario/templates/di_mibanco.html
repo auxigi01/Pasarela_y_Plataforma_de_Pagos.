@@ -1,0 +1,99 @@
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Débito Inmediato - MiBanco</title>
+    <link rel="icon" href="{{ url_for('static', filename='img/logo_rojo_rescarven.png') }}" type="image/png">
+</head>
+<link rel="stylesheet" href="/zona_usuario/static/css/di_mibanco.css">
+<body>
+    <div class="main-container">
+    <h3>Débito Inmediato</h3>
+    <form method="POST" action="/di_mibanco" id="paymentForm">
+        
+        <fieldset>
+        <label>Banco:</label><br>
+        <select name="Banco" required>
+            <option value="0105">MERCANTIL (0105)</option>
+            <option value="0102">BANCO DE VENEZUELA (0102)</option>
+            <option value="0104">VENEZOLANO DE CRÉDITO (0104)</option>
+            <option value="0108">BANCO PROVINCIA (0108)</option>
+            <option value="0114">BANCO DEL CARIBE (0114)</option>
+            <option value="0115">BANCO EXTERIOR (0115)</option>
+            <option value="0116">BOD (0116)</option>
+            <option value="0128">BANCO CARONÍ (0128)</option>
+            <option value="0134">BANESCO (0134)</option>
+            <option value="0137">SOFITASA (0137)</option>
+            <option value="0138">BANCO PLAZA (0138)</option>
+            <option value="0151">FONDO COMÚN (0151)</option>
+            <option value="0156">100% BANCO (0156)</option>
+            <option value="0157">DEL SUR (0157)</option>
+            <option value="0163">BANCO DEL TESORO (0163)</option>
+            <option value="0166">BANCO AGRÍCOLA (0166)</option>
+            <option value="0168">BANCRECER (0168)</option>
+            <option value="0169">MIBANCO (0169)</option>
+            <option value="0171">BANCO ACTIVO (0171)</option>
+            <option value="0172">BANCAMIGA (0172)</option>
+            <option value="0174">BANPLUS (0174)</option>
+            <option value="0175">BICENTENARIO (0175)</option>
+            <option value="0177">BANFANB (0177)</option>
+            <option value="0191">BNC (0191)</option>
+        </select>
+</fieldset>
+
+<fieldset>
+        <label>Monto:</label>
+        <input type="text" name="Monto" required>
+    </fieldset>
+
+    <fieldset>
+        <!-- Teléfono -->
+        <label for="customerid">Teléfono:</label><br>
+        <div>
+        <select name="customerid-prefix" id="customerid-prefix" required>
+            <option value="0414">0414</option>
+            <option value="0424">0424</option>
+            <option value="0412">0412</option>
+            <option value="0416">0416</option>
+            <option value="0426">0426</option>
+        </select>
+        <input type="number" name="TelefonoNumero" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 7)" required>
+    </div>
+    </fieldset>
+
+
+    
+    <fieldset>
+        <!-- Cédula -->
+        <label>Cédula:</label><br>
+        <div>
+        <select name="customerid-prefix" id="customerid-prefix" required>
+            <option value="V">V</option>
+            <option value="J">J</option>
+            <option value="G">G</option>
+            <option value="P">P</option>
+            <option value="C">C</option>
+        </select>
+        <input type="number" name="CedulaNumero" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 9)" required>
+        </div>
+    </fieldset>
+
+    <fieldset>
+        <!-- Nombre -->
+        <label>Nombre:</label><br>
+        <input type="text" name="Nombre" maxlength="20" required>
+    </fieldset>
+    <fieldset>
+        <!-- OTP -->
+        <label>OTP:</label><br>
+        <input type="text" name="OTP" maxlength="8" required>
+    </fieldset>
+    <fieldset>
+        <!-- Concepto -->
+        <label>Concepto:</label><br>
+        <input type="text" name="Concepto" maxlength="30" required>
+    </fieldset>
+        <button class="button" type="submit">Enviar</button>
+    </form>
+</div>
+</body>
+</html>

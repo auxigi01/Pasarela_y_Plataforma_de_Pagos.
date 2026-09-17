@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/ini.css')}}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rescarven</title>
+    <link rel="icon" href="{{ url_for('static', filename='img/logo_rojo_rescarven.png') }}" type="image/png">
+</head>
+<body>
+    <header>
+        <div class="container__menu">
+            <div class="logo">
+                <img src="{{ url_for('static', filename='img/logo_blanco.png') }}" style=" height: 100px;">
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('inicio')}}" id="selected" class="usuario" ><strong>Ingresar</strong></a></li>
+                    <li><a href="{{ url_for('registro')}}" class="salir"><strong>Registrar</strong></a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="form-container">
+         
+        <form action="{{ url_for('iniciarsesion') }}" method="post">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <h2>INICIE SESIÓN EN SU CUENTA</h2>
+
+            <div class="form-group">
+                <input required="" type="email" name="email" placeholder=" " class="email_login" id="email_login" maxlength="40">
+                <label class="email-label">CORREO ELECTRÓNICO</label>
+              </div>
+             
+    
+            <div class="form-group"> 
+                <input required="" type="password" name="password" placeholder=" " class="password_login" id="password_login"  maxlength="20" >
+                <label class="password-label">CONTRASEÑA</label>
+                <img src="{{ url_for('static', filename='img/ver.png') }}" alt="ver" class="ver" id="ver">
+            </div>
+
+           
+            <h4><a href="{{ url_for('recuperar_contraseña') }}" class="olv_ctrs" >¿Olvidaste tu contraseña?</a></h4>
+            <button type="submit" class="btn btn-primary">Acceder</button>
+
+              
+           <h5><p>¿No tienes una cuenta?<a href="{{ url_for('registro') }}" class="registrate">Regístrate</a></p></h5>
+           {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="{{ 'alert-container-success' if category == 'login_success' else 'alert-container' }}">
+                {% if category == 'login_success' %}
+                    <div class="alert alert-success">
+                        <img src="{{ url_for('static', filename='img/iccorrecto.png') }}" alt="Success Icon">
+                        <span>{{ message }}</span>
+                    </div>
+                {% else %}
+                    <div class="alert alert-danger">
+                        <img src="{{ url_for('static', filename='img/icerror.png') }}" alt="Error Icon">
+                        <span>{{ message }}</span>
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+        </form>
+       
+    </div>
+    </div>
+    <script src="{{url_for('static', filename='js/inicio.js')}}"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const alerts = document.querySelectorAll(".alert-container, .alert-container-success");
+            alerts.forEach(alert => {
+                setTimeout(() => {
+                    alert.style.opacity = "0";
+                    setTimeout(() => {
+                        alert.remove();
+                    }, 1000); 
+                }, 5000); 
+            });
+        });
+    </script>
+    </body>
+</html>

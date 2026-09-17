@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/recibo_de_pago.css')}}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrador</title>
+    <link rel="icon" href="{{ url_for('static', filename='img/logo_rojo_rescarven.png') }}" type="image/png">
+
+</head>
+<body>
+    <div class="content">
+        <div class="sidebar">
+            <div class="logo">
+                <div class="menu-hamburguesa-container">
+                    <div class="menu-hamburguesa">&#9776;</div>
+                </div>
+                <img src="{{ url_for('static', filename='img/logo_rescarven.png') }}" alt="Logo" style="width:210px; height: 200px">
+            </div>
+            <nav class="menu">
+                <ul>
+                    <div class="panel">
+                        <ul>
+                            <li class="active"><a href="{{url_for('mibanco')}}">Pagos móviles</a></li>
+                        </ul>
+                    </div>
+   
+                </ul>
+            </nav>
+        </div> 
+        <div class="container">
+            <div class="main-content">
+                <header class="top-bar">
+                    <div class="cerrar-sesion-contenedor">
+                        <img src="{{ url_for('static', filename='img/cerrar_sesion.png') }}" class="cerrar_sesion" alt="Cerrar sesión">
+                        <a id="salir" name="salir" class="salir" href="{{ url_for('logout') }}" oncontextmenu="return false;">Cerrar sesión</a>
+                    </div> 
+    
+                <div class="user-icon">
+                    <div class="dropdown">
+                        <div class="menu-button" onclick="toggleDropdown()">
+                            <img src="{{ url_for('static', filename='img/usuario.png') }}" alt="Usuario">
+                        </div>
+                        <div class="dropdown-content" id="dropdown-menu">
+                            <div class="user-name"><p>Administrador</p></div>
+                        </div>
+                    </div>
+                </div>
+                </header>
+                <div class="contenido">
+                    <div class="arriba">
+                        <h1>Historial de pagos</h1>
+                        <!-- From Uiverse.io by LightAndy1 --> 
+                        <div class="input-wrapper">
+                            <div class="group">
+                                <svg viewBox="0 0 24 24" aria-hidden="true" class="search-icon">
+                                    <g>
+                                        <path
+                                            d="M21.53 20.47l-3.66-3.66C19.195 15.24 20 13.214 20 11c0-4.97-4.03-9-9-9s-9 4.03-9 9 4.03 9 9 9c2.215 0 4.24-.804 5.808-2.13l3.66 3.66c.147.146.34.22.53.22s.385-.073.53-.22c.295-.293.295-.767.002-1.06zM3.5 11c0-4.135 3.365-7.5 7.5-7.5s7.5 3.365 7.5 7.5-3.365 7.5-7.5 7.5-7.5-3.365-7.5-7.5z"
+                                        ></path>
+                                    </g>
+                                </svg>
+                                <input maxlength="15" id="input-search" class="input" type="search"
+                                       placeholder="Buscar Referencia"
+                                       name="searchbar" />
+                            </div>
+                        </div>   
+                    </div>
+
+                <!-- Contenedor principal para organizar los elementos en fila -->
+            <div class="caja_fecha">
+                <!-- Botones para alternar entre las búsquedas -->
+                <div class="botones">
+                    <button class="periodo" type="button" onclick="mostrarBusqueda('periodo')">Buscar por Período</button>
+                    <button class="rango" type="button" onclick="mostrarBusqueda('rango')">Buscar por Rango de Fechas</button>
+                </div>
+
+                <!-- Contenedor de los formularios en una fila -->
+                <div class="formularios">
+                    <!-- Formulario de búsqueda por período -->
+                    <form id="form-periodo" method="GET" action="{{ url_for('mibanco') }}">
+                        <select id="periodo" name="periodo">
+                            <option value="hoy">Hoy</option>
+                            <option value="ultima_semana">Última Semana</option>
+                            <option value="mes">Mes</option>
+                            <option value="tres_meses">Últimos Tres Meses</option>
+                        </select>
+                        <button type="submit" class="btn-buscar">Buscar</button>
+                    </form>
+                    
+                    <!-- Formulario de búsqueda por rango de fechas -->
+                    <form id="form-rango" method="GET" action="{{ url_for('mibanco') }}" style="display: none;">
+                        <input type="date" id="fecha_inicio" name="fecha_inicio" required>
+                        <input type="date" id="fecha_fin" name="fecha_fin" required>
+                        <button type="submit" class="btn-buscar">Buscar</button>
+                    </form>
+                </div>
+            </div>
+
+
+                    <div id="stabla-container">
+                        <div id="stabla">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Id del comercio</th>
+                                        <th>Telefono emisor</th>
+                                        <th>Banco emisor</th>
+                                        <th>Monto</th>
+                                        <th>Fecha</th>
+                                        <th>Referencia</th>
+                                    </tr>
+                                </thead>
+                                <tr id="noResultados" style="display: none;">
+                                    <center><td colspan="6">No se encontraron resultados</td></center>
+                                </tr> 
+                            <tbody id="tablaBody">
+                            {% for recibo in registros_mibanco %}
+                            <tr data-fecha="{{ recibo.fecha }}">
+
+                                <td class="datos">{{ recibo.idcomercio }}</td>
+
+                                <td class="datos">{{ recibo.telefonoemisor }}</td>
+
+                                <td class="datos">{{ recibo.bancoemisor }}</td>
+
+                                <td class="datos" data-monto>{{ recibo.monto }}</td>
+
+                                <td class="datos" data-fecha>{{ recibo.fecha }}</td>
+
+                                <td class="datos" data-referencia>{{ recibo.referencia }}</td>
+
+                            </tr>
+                            {% endfor %}
+                            </tbody>                              
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                    
+
+    <div id="session-expired-modal">
+        <div id="session-expired-content">
+            <p id="session-expired-message">Tu tiempo de sesión ha expirado. ¿Quieres extenderla?</p>
+            <div id="session-expired-buttons">
+                <button class="session-button" onclick="extendSession()">Extender Sesión</button>
+                <button id="logout-button" class="session-button" onclick="logout()">Cerrar Sesión</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelectorAll("td[data-fecha]").forEach(td => {
+                let fechaStr = td.innerText.trim();
+                if (fechaStr) {
+                    let [year, month, day] = fechaStr.split("-");
+                    let fecha = new Date(year, month - 1, day); // <-- Este sí respeta la fecha
+                    td.innerText = fecha.toLocaleDateString("es-VE"); // Formato DD/MM/AAAA
+                }
+            });
+    
+            document.querySelectorAll("td[data-monto]").forEach(td => {
+                let monto = parseFloat(td.innerText.replace(",", "."));
+                if (!isNaN(monto)) {
+                    td.innerText = monto.toLocaleString("es-VE", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    });
+                }
+            });
+        });
+    </script>
+    <script>
+        document.getElementById("input-search").addEventListener("input", onInputChange);
+
+            function onInputChange() {
+        const input = document.getElementById("input-search");
+        const filter = input.value.toUpperCase();
+        const filas = document.querySelectorAll("#tablaBody tr");
+        const noResultados = document.getElementById("noResultados");
+        let hayCoincidencias = false;
+
+        if (filter.trim() === "") {
+            filas.forEach(fila => fila.style.display = "none");
+            noResultados.style.display = "table-row";
+            return;
+        }
+
+        filas.forEach(fila => {
+            const celdaReferencia = fila.querySelector('[data-referencia]');
+            const texto = celdaReferencia?.textContent || "";
+            const coincide = texto.toUpperCase().includes(filter);
+
+            fila.style.display = coincide ? "table-row" : "none";
+            if (coincide) hayCoincidencias = true;
+        });
+
+        noResultados.style.display = hayCoincidencias ? "none" : "table-row";
+    }
+        
+        // Ocultar todas las filas al cargar la página
+        window.onload = function() {
+            let filas = document.querySelectorAll("#tablaBody tr");
+            let noResultados = document.getElementById("noResultados");
+        
+            filas.forEach(fila => fila.style.display = "none");
+            noResultados.style.display = "none"; // Asegurar que el mensaje también está oculto
+        };
+               
+    </script>    
+
+    <script src="{{url_for('static', filename='js/menuspago.js')}}"></script>      
+    <script src="{{url_for('static', filename='js/icusuario.js')}}"></script> 
+
+    <script>
+        function mostrarBusqueda(tipo) {
+            if (tipo === 'periodo') {
+                document.getElementById('form-periodo').style.display = 'block';
+                document.getElementById('form-rango').style.display = 'none';
+            } else if (tipo === 'rango') {
+                document.getElementById('form-periodo').style.display = 'none';
+                document.getElementById('form-rango').style.display = 'block';
+            }
+        }
+    
+        function ocultarFilasTabla() {
+            const filas = document.querySelectorAll("#tablaBody tr");
+            filas.forEach(fila => fila.style.display = "none");
+        }
+    
+        function mostrarResultados(periodo, fechaInicio, fechaFin) {
+            const filas = document.querySelectorAll("#tablaBody tr");
+            let hayResultados = false;
+    
+            filas.forEach(fila => {
+                const dataPeriodo = fila.getAttribute("data-periodo");
+                const dataFecha = fila.getAttribute("data-fecha");
+    
+                console.log("Comparando:", dataFecha, "Con:", fechaInicio, "y", fechaFin);
+    
+                let mostrar = false;
+    
+                // Si el backend ya filtró por período, solo mostramos las filas recibidas
+                if (periodo) {
+                    mostrar = true;
+                } 
+                // Si la búsqueda es por rango de fechas, comparamos en JS
+                else if (fechaInicio && fechaFin && dataFecha) {
+                    // Convertimos las fechas a objetos Date para hacer la comparación
+                    const fechaFila = new Date(dataFecha);
+                    const inicio = new Date(fechaInicio);
+                    const fin = new Date(fechaFin);
+                    fin.setHours(23, 59, 59, 999); // Aseguramos que la fecha final incluye todo el día
+    
+                    console.log("Fecha fila:", fechaFila, "Fecha inicio:", inicio, "Fecha fin:", fin);
+    
+                    // Verificamos si la fecha de la fila está dentro del rango
+                    if (fechaFila >= inicio && fechaFila <= fin) {
+                        mostrar = true;
+                    }
+                }
+    
+                if (mostrar) {
+                    fila.style.display = "table-row";
+                    hayResultados = true;
+                } else {
+                    fila.style.display = "none";
+                }
+            });
+    
+            // Mostrar el mensaje de "No se encontraron resultados" si no hay coincidencias
+            document.getElementById('noResultados').style.display = hayResultados ? 'none' : 'table-row';
+        }
+    
+        function mantenerBusqueda() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const periodo = urlParams.get('periodo');
+            const fechaInicio = urlParams.get('fecha_inicio');
+            const fechaFin = urlParams.get('fecha_fin');
+    
+            console.log("Parametros de URL:", periodo, fechaInicio, fechaFin);
+    
+            ocultarFilasTabla(); // Oculta todas las filas al inicio
+    
+            if (periodo) {
+                mostrarBusqueda('periodo');
+            } else if (fechaInicio && fechaFin) {
+                mostrarBusqueda('rango');
+            }
+    
+            mostrarResultados(periodo, fechaInicio, fechaFin);
+        }
+        window.onload = mantenerBusqueda;
+    </script>
+</body>
+</html>

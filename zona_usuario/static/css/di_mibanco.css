@@ -1,0 +1,195 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    background-image: url('fondo_contraseña.png');
+    background-size: cover;       
+    background-repeat: no-repeat; 
+    background-position: center; 
+    background-attachment: fixed; 
+  }
+  
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat';
+    text-decoration: none;
+  }
+
+.main-container {
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: center; 
+    min-height: 100vh; 
+    padding: 20px; 
+    box-sizing: border-box; 
+    gap: 10px; 
+    margin-top: 50px;
+}
+
+h3 {
+    font-size: 1.5rem;
+    color: #333; 
+    margin: 0; 
+    text-align: center; 
+}
+
+#paymentForm {
+    background-color: white; 
+    justify-items: center;
+    grid-template-columns: repeat(2, 1fr); 
+    border-radius: 30px; 
+    max-width: 500px; 
+    display: grid; 
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 15px; 
+    padding: 20px; 
+    box-shadow: 0 10px 20px rgb(125, 163, 233), 0 10px 20px rgba(0, 0, 0, 0.2);
+    width: 100%; 
+}
+
+fieldset {
+    border: none; 
+    margin: 0; 
+}
+
+fieldset div {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    justify-content: flex-start;
+}
+
+label {
+    font-weight: bold;
+    color: #555;
+    min-width: 100px; 
+    text-align: right;
+    margin-right: 10px;
+    font-size: 0.9rem; 
+}
+
+input,
+select {
+    padding: 10px;
+    border: 1px solid #333;
+    border-radius: 15px;
+    transition: border-color 0.3s;
+    font-size: 0.9rem; 
+    color: #333;
+    width: 100%; 
+}
+
+/* Select específico */
+#customerid-prefix {
+    max-width: 80px; 
+}
+        
+
+
+/* Botones */
+button {
+    grid-column: span 2; 
+    max-width: 200px;
+    width: 100%;
+    margin: 0 auto; 
+}
+
+.button {
+    color: #090909;
+    padding: 0.7em 1.7em;
+    font-size: 16px;
+    border-radius: 0.5em;
+    background: #e8e8e8;
+    cursor: pointer;
+    border: 1px solid #e8e8e8;
+    transition: all 0.3s;
+    box-shadow: 6px 6px 12px #c5c5c5, -6px -6px 12px #ffffff;
+    display: block; 
+    position: relative;
+    margin: 1px auto !important; 
+    max-width: 200px;
+    width: 100%; 
+  }
+  
+.button:hover {
+    border: 1px solid white;
+  }
+  
+.button:active {
+    box-shadow: 4px 4px 12px #c5c5c5, -4px -4px 12px #ffffff;
+  }
+
+/* Respuesta en pantallas pequeñas */
+@media (max-width: 768px) {
+#paymentForm{
+    display: block;
+    grid-template-columns: 1fr;
+    max-width: 350px;         
+    overflow-y: auto;  
+}
+
+fieldset {
+    display: block; 
+    width: 100%; 
+    margin: 0; 
+    padding: 0; 
+    border: none; 
+}
+
+input,
+select {
+    width: 100%; 
+    box-sizing: border-box; 
+}
+
+
+label {
+    text-align: left; 
+    margin-right: 0;
+}
+/* Estilo para el botón */
+button {
+width: 100%;
+top: 10px ;
+}
+}
+
+
+.flash-message {
+display: none; /* Inicialmente oculto */
+position: fixed;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+background-color: #ffffff;  
+padding: 20px;
+border-radius: 10px;
+z-index: 1000;
+text-align: center;
+box-shadow: 0 0 px rgba(0, 0, 0, 0.9);  
+font-size: 120%;
+}
+
+.flash-message .success {
+color: green; 
+}
+
+.flash-message .error {
+color: red; 
+}
+
+.flash-message img {
+display: block; 
+margin: 0 auto; 
+height: auto;
+width: 50px; 
+border-radius: 5px; 
+}
+    

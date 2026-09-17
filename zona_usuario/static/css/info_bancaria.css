@@ -1,0 +1,222 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    background-image: url('fondo_contraseña.png');
+    background-size: cover;       
+    background-repeat: no-repeat; 
+    background-position: center; 
+    background-attachment: fixed; 
+  }
+  
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat';
+    text-decoration: none;
+  }
+
+  .main-container {
+    display: flex; 
+    flex-direction: column; 
+    align-items: center;
+    justify-content: center; 
+    min-height: 100vh;
+    padding: 20px; 
+    box-sizing: border-box;
+    gap: 10px; 
+    margin-top: 40px;
+
+  }
+
+
+
+h2 {
+    font-size: 1.5rem;
+    color: #333; 
+    margin: 0; 
+    text-align: center; 
+}
+
+#paymentForm {
+    background-color: white; 
+    grid-template-columns: repeat(2, 1fr); 
+    border-radius: 30px; 
+    max-width: 500px; 
+    display: grid; 
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 10px; 
+    padding: 20px; 
+    box-shadow: 0 10px 20px rgb(125, 163, 233), 0 10px 20px rgba(0, 0, 0, 0.2);
+    width: 100%; 
+    justify-items: center; 
+}
+
+fieldset {
+    border: none; 
+    margin: 0; 
+}
+
+fieldset div {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    justify-content: flex-start;
+}
+
+label {
+    font-weight: bold;
+    color: #555;
+    min-width: 100px; 
+    text-align: right;
+    margin-right: 10px;
+    font-size: 0.9rem; 
+}
+
+input,
+select {
+    padding: 10px;
+    border: 1px solid #333;
+    border-radius: 15px;
+    transition: border-color 0.3s;
+    font-size: 0.9rem;
+    color: #333;
+    width: 100%; 
+}
+
+
+
+
+.expiration-group {
+    display: flex;
+    align-items: center;
+    gap: 5px; 
+}
+
+.expiration-group input {
+    padding: 10px;
+    border: 1px solid #333;
+    border-radius: 15px;
+    transition: border-color 0.3s;
+    font-size: 14px;
+    color: #333;
+    width: 60px; 
+    text-align: center;
+}
+
+button {
+    grid-column: span 2; 
+    max-width: 200px;
+    width: 100%;
+    margin: 0 auto; 
+}
+
+button {
+    background: #01265C;
+    color: #fff;
+    border: none;
+    height: 33px;
+    font-size: 1.1em;
+    padding: 0 2em;
+    box-shadow: 0 10px 20px rgb(125, 163, 233), 0 10px 20px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: 800ms ease all;
+    outline: none;
+    display: block; 
+    position: relative;
+    max-width: 200px; 
+    width: 100%; 
+  }
+  
+  button:hover{
+    background:#fff;
+    color:#01265C;
+  }
+  button:before,button:after{
+    content:'';
+    position:absolute;
+    top:0;
+    right:0;
+    height:2px;
+    width:0;
+    background: #01265C;
+    transition:400ms ease all;
+  }
+  button:after{
+    right:inherit;
+    top:inherit;
+    left:0;
+    bottom:0;
+  }
+  button:hover:before,button:hover:after{
+    width:100%;
+    transition:800ms ease all;
+  }
+
+  .flash-message {
+    display: none; 
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #ffffff;  
+    padding: 20px;
+    border-radius: 10px;
+    z-index: 100000000;
+    text-align: center;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.9);  
+    font-size: 1.2rem; 
+    max-width: 90%; 
+    width: 400px; 
+    box-sizing: border-box; 
+    word-wrap: break-word; 
+    overflow-wrap: break-word; 
+    overflow: hidden; 
+}
+
+.flash-message .success {
+    color: green; 
+}
+
+.flash-message .error {
+    color: red; 
+}
+
+.flash-message img {
+    height: auto; 
+    width: 20%; 
+    max-width: 60px; 
+    border-radius: 5px; 
+}
+
+/* Media queries para responsividad */
+@media (max-width: 768px) {
+    .flash-message {
+        font-size: 1rem; 
+        padding: 15px; 
+        width: 80%; 
+    }
+
+    .flash-message img {
+        width: 20%; 
+    }
+}
+
+@media (max-width: 480px) {
+    .flash-message {
+        font-size: 0.9rem; 
+        padding: 10px; 
+        width: 95%; 
+    }
+
+    .flash-message img {
+        width: 20%; 
+        max-width: 40px;
+    }
+}
+

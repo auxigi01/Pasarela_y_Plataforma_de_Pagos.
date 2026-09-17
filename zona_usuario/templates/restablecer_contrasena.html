@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/restablecer_contrasena.css')}}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rescarven</title>
+    <link rel="icon" href="{{ url_for('static', filename='img/logo_rojo_rescarven.png') }}" type="image/png">
+</head>
+<body>
+    <header>
+        <div class="container__menu">
+            <div class="logo">
+                <img src="{{ url_for('static', filename='img/logo_blanco.png') }}" style=" height: 100px;">
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('inicio')}}"  class="usuario" ><strong>Ingresar</strong></a></li>
+                    <li><a href="{{ url_for('registro')}}" class="salir"><strong>Registrar</strong></a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="contenedor">
+    <div class="form-container">
+     <form action="" method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <h2>Restablecer Contraseña</h2>
+        <div class="form-group">
+            <input type="password" class="new_password" id="new_password" name="new_password" placeholder="" required minlength="12" maxlength="64">
+            <label for="new_password" class="label-email">Nueva Contraseña</label><br>
+        </div>
+        <button type="submit" class="btn btn-primary">Cambiar</button>
+        <div class="messagess">
+        </div>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="alert-container" id="flash-message">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ 'success' if category == 'success' else 'danger' }}">
+                        <img src="{{ url_for('static', filename='img/icerror.png') }}" alt="Error Icon">
+                        <span>{{ message }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+    <script>
+        // Espera 6 segundos y luego oculta el mensaje
+        setTimeout(function() {
+            var flashMessage = document.getElementById("flash-message");
+            if (flashMessage) {
+                flashMessage.style.display = "none";
+            }
+        }, 6000);
+    </script>
+</div>
+    </form>
+    </body>
+</html>

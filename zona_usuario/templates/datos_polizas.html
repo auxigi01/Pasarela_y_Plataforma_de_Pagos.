@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/datos_polizas.css')}}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planes</title>
+    <link rel="icon" href="{{ url_for('static', filename='img/logo_rojo_rescarven.png') }}" type="image/png">
+    
+</head>
+<body>
+     <div class="content">
+        <div class="sidebar">
+            <div class="logo">
+                <div class="menu-hamburguesa-container">
+                    <div class="menu-hamburguesa">&#9776;</div>
+                </div>
+                <img src="{{ url_for('static', filename='img/logo_rescarven.png') }}" alt="Logo" style="width:210px; height: 200px">
+            </div>
+            <nav class="menu">
+                <ul>
+                    <li><a href="{{url_for('paginaprincipal')}}">Inicio</a></li>
+                    <li class="active"><a href="{{url_for('info_planes') }}">Planes</a></li>   
+                    <li><a href="{{url_for('recibo_de_pago')}}">Consultas</a></li>
+                </ul>
+            </nav>
+        </div>  
+        <div class="container">
+            
+            <div class="main-content">
+                <header class="top-bar">
+                    <div class="cerrar-sesion-contenedor">
+                        <img src="{{ url_for('static', filename='img/cerrar_sesion.png') }}" class="cerrar_sesion" alt="Cerrar sesión">
+                        <a id="salir" name="salir" class="salir" href="{{ url_for('logout') }}" oncontextmenu="return false;">Cerrar sesión</a>
+                    </div>               
+                <div class="user-icon">
+                    <div class="dropdown">
+                        <div class="menu-button" onclick="toggleDropdown()">
+                            <img src="{{ url_for('static', filename='img/usuario.png') }}" alt="Usuario">
+                        </div>
+                        <div class="dropdown-content" id="dropdown-menu">
+                            <div class="user-name"> {{ nombre }} {{ apellido }}</div>
+                            <a href="{{ url_for('cambiar_contraseña') }}">Cambiar Contraseña</a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <div class="contenido">
+                <h1>Datos del Plan de Salud</h1>
+                <p>Seleccione la cuota que desea pagar:</p>
+                {% if no_encontrado %}
+                <div id="alert-container">
+                    <img src="{{ url_for('static', filename='img/icerror.png') }}" id="alertimg">
+                    <p>No se encontraron cuotas pendientes para este contrato</p>
+                </div>
+                {% else %}
+                    {% if datos %}
+                    <div id="stabla-container">
+                        <div id="stabla">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th><input type="checkbox" id="select-all"></th>
+                                        <th>Cuota</th>
+                                        <th>Estatus</th>
+                                        <th>Fecha de Vencimiento</th>
+                                        <th>Moneda</th>
+                                        <th>MontoBs</th>
+                                        <th>MontoUs</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for cuenta in datos %}
+                                    <tr>
+                                        <td><input type="checkbox" class="row-checkbox"></td>
+                                        <td>{{ cuenta.Cuota }}</td>
+                                        <td>{{ cuenta.Estatus }}</td>
+                                        <td>{{ cuenta.Fecha_vcto }}</td>
+                                        <td>{{ cuenta.Moneda }}</td>
+                                        <td class="monto">{{ cuenta.MontoBs }}</td>
+                                        <td class="montous">{{ cuenta.MontoUs }}</td>
+                                        <td style="display: none;">{{ cuenta.IdCuota }}</td>
+                                        <td style="display: none;">{{ cuenta.Tasa }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div id="button-container">
+                        <div id="totalbs">Pagar Total BS: {{ total_monto }}</div>
+                        <div id="totalusd">Pagar Total USD: {{ total_monto_us }}</div>
+                        </a>
+                    </div>
+                    <small id="montoHelp" class="form-text text-muted" style="display: none; color: red;">Por favor, seleccione al menos una cuota</small>      
+                    {% else %}
+                    <p>No se encontraron datos de cuentas.</p>
+                    {% endif %}
+                {% endif %}
+            </div>
+            </div>        
+            <div id="flash-container"></div>
+            <div id="confirm-container"></div>        
+    </div>
+</div>
+
+<div id="session-expired-modal">
+    <div id="session-expired-content">
+        <p id="session-expired-message">Tu tiempo de sesión ha expirado. ¿Quieres extenderla?</p>
+        <div id="session-expired-buttons">
+            <button class="session-button" onclick="extendSession()">Extender Sesión</button>
+            <button id="logout-button" class="session-button" onclick="logout()">Cerrar Sesión</button>
+        </div>
+    </div>
+</div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{{url_for('static', filename='js/datos_polizas.js')}}"></script>
+    <script src="{{url_for('static', filename='js/icusuario.js')}}"></script>
+    <input type="hidden" id="compania" value="{{ compania }}" readonly>
+    <input type="hidden" id="moneda" value="{{ moneda }}" readonly>
+
+</body>
+</html>

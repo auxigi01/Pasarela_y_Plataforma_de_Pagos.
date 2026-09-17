@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/pagos_bs.css')}}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagos BS</title>
+    <link rel="icon" href="{{ url_for('static', filename='img/logo_rojo_rescarven.png') }}" type="image/png">
+</head>
+<body>
+
+    <div class="content">
+        <div class="sidebar">
+            <div class="logo">
+                <div class="menu-hamburguesa-container">
+                    <div class="menu-hamburguesa">&#9776;</div>
+                </div>
+                <img src="{{ url_for('static', filename='img/logo_rescarven.png') }}" alt="Logo" style="width:210px; height: 200px">
+            </div>
+            <nav class="menu">
+                <ul>
+                    <li><a href="{{url_for('paginaprincipal')}}">Inicio</a></li>
+                    <li class="active"><a href="{{url_for('info_planes') }}">Planes</a></li>
+                    <li><a href="{{url_for('recibo_de_pago')}}">Consultas</a></li>
+   
+                </ul>
+            </nav>
+        </div>  
+        <div class="container">
+            <div class="main-content">
+                <header class="top-bar">
+                    <div class="cerrar-sesion-contenedor">
+                        <img src="{{ url_for('static', filename='img/cerrar_sesion.png') }}" class="cerrar_sesion" alt="Cerrar sesión">
+                        <a id="salir" name="salir" class="salir" href="{{ url_for('logout') }}" oncontextmenu="return false;">Cerrar sesión</a>
+                    </div> 
+    
+                <div class="user-icon">
+                    <div class="dropdown">
+                        <div class="menu-button" onclick="toggleDropdown()">
+                            <img src="{{ url_for('static', filename='img/usuario.png') }}" alt="Usuario">
+                        </div>
+                        <div class="dropdown-content" id="dropdown-menu">
+                            <div class="user-name">{{ nombre }} {{ apellido }}</div>
+                            <a href="{{ url_for('cambiar_contraseña') }}">Cambiar Contraseña</a>
+                        </div>
+                    </div>
+                </div>
+                </header>
+                <div class="contenido">
+                    <h2>Por favor seleccione la forma de pago de su preferencia.</h2>
+                    <div id="flashMessage" class="flash-message" style="display: none; text-align: center;">
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                        {% for category, message in messages %}
+                            {% if category == 'payment_error' %}
+                            <p class="error">{{ message }}</p>
+                            <img src="{{ url_for('static', filename='img/pagonegado.png') }}" alt="Pago negado"
+                                class="flash-icon" style="height:45px; margin-top: -10px;">
+                            <div style="margin-top: 10px;">
+                                <button id="closeFlashError" class="btn btn-primary btn-sm">Aceptar</button>
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+                    </div>
+                  
+                    <!--
+               
+                    <div class="menu2">
+                        <div class="header2">
+                            Tarjeta de Debito 
+                            <img src="{{ url_for('static', filename='img/Banco_Mercantil_Logo.png') }}" class="mercantil">
+                            <span class="clas1">▼</span>
+                        </div>
+                        <div class="content2">
+                            
+                            <div id="custom-alert-1" style="display: none; position: fixed; top: 50%; left: 48%; width: 280px; transform: translate(-50%, -50%); background-color: #ffffff; padding: 10px; border-radius: 10px; z-index: 1000; text-align: center; box-shadow: 0 0 25px rgba(0, 0, 0, 0.6); font-family: Arial, sans-serif; color: rgba(255, 0, 0, 0.9); font-size: 130%;">
+                                <span id="alert-message"></span>
+                                <img id="alert-icon" src="{{ url_for('static', filename='img/pagonegado.png') }}" alt="Pago negado" class="flash-icon" style="display: none; max-width: 50px; margin-bottom: 10px; margin-left:41%;">  
+                            </div>
+                            
+                            <form id="tdd_m" method="POST" action="/getauth">
+    <fieldset>
+        <label for="customerid_autom">Número de cédula:</label>
+        <div>
+            <select id="customerid-prefix_autom" name="customerid_prefix" required>
+                <option selected value="V">V</option>
+                <option value="J">J</option>
+                <option value="G">G</option>
+                <option value="P">P</option>
+                <option value="C">C</option>
+            </select>
+            <input type="number" id="customerid_autom" name="customerid" 
+                oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 9)" required/>
+        </div>
+    </fieldset>
+
+    <fieldset>
+        <label for="card-number_autom">Número de tarjeta:</label>
+        <input type="number" id="card-number_autom" name="card_number" 
+            oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 20)" required/>
+    </fieldset>
+
+    <fieldset>
+        <label for="account-type">Cuenta</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <label for="cvv">CVV</label><br>
+        <div>
+            <select name="account-type" id="account-type" required>
+                <option value="CC">Corriente</option>
+                <option value="CA">Ahorro</option>
+            </select>
+            <input type="text" name="cvv" id="cvv" 
+                oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0,3)" required />
+        </div>
+    </fieldset>
+
+    <fieldset>
+        <label for="expiration-date">Fecha de expiración:</label><br>
+        <input type="text" name="expiration-date" id="expiration-date" placeholder="YYYY/MM" required />
+    </fieldset>
+
+    <fieldset>
+        <label for="amounttdd">Monto:</label><br>
+<input type="text" name="amounttdd" id="amounttdd"
+       value="{{ '{:,.2f}'.format(montobs|float).replace(',', 'X').replace('.', ',').replace('X', '.') }}" style="text-align: right;"
+       readonly required />
+    </fieldset>
+
+    <fieldset>
+        <label for="twofactortdd">OTP:</label><br>
+        <input type="number" name="twofactortdd" id="twofactortdd" 
+            oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0,8)" required />
+    </fieldset>
+
+    <button class="button" type="submit">Pagar</button>
+</form>
+
+<div id="loaderOverlay">
+    <div class="spinner"></div>
+</div>
+
+<script>
+    // Formateo automático del campo expiration-date
+    const expirationInput = document.getElementById("expiration-date");
+
+    expirationInput.addEventListener("input", function (event) {
+        let value = expirationInput.value.replace(/\D/g, "");
+        let cursorPosition = expirationInput.selectionStart;
+        let isDeleting = event.inputType === "deleteContentBackward";
+
+        if (isDeleting && cursorPosition === 6) {
+            value = value.slice(0, 4);
+        } else if (value.length > 6) {
+            value = value.slice(0, 6);
+        }
+
+        if (value.length > 4) {
+            value = value.slice(0, 4) + "/" + value.slice(4);
+        }
+
+        expirationInput.value = value;
+
+        if (isDeleting && cursorPosition === 6) {
+            expirationInput.setSelectionRange(5, 5);
+        } else if (cursorPosition === 5 && !isDeleting) {
+            expirationInput.setSelectionRange(6, 6);
+        } else {
+            expirationInput.setSelectionRange(cursorPosition, cursorPosition);
+        }
+    });
+
+    // Mostrar loader al enviar el formulario
+    document.addEventListener("DOMContentLoaded", function () {
+        const formTDD = document.getElementById("tdd_m");
+        const loader = document.getElementById("loaderOverlay");
+
+        if (formTDD && loader) {
+            formTDD.addEventListener("submit", function () {
+                loader.classList.add("active");
+            });
+        }
+    });
+</script>
+</div>
+</div>
+<hr class="hr1">
+
+<div class="menu2">
+<div class="header2">
+Pago Móvil C2P 
+<img src="{{ url_for('static', filename='img/Banco_Mercantil_Logo.png') }}" class="mercantil_pagomovil">
+<span class="clas1">▼</span>
+</div>
+<div class="content2">
+<div class="scrollable-container">
+<div class="main-container">
+    <form id="c2pm" action="{{ url_for('pago_c2pm') }}" method="POST">
+        <fieldset id="fieldset2" style="display: none;">
+            <label>Tipo de transacción</label>
+            <select name="trxType" required>
+                <option value="compra" selected>Compra</option>
+            </select>
+        </fieldset>
+
+    <fieldset >
+        <label for="customerid_c2p">Número de cédula:</label>
+        <div>
+            <select name="customerIdPrefix" id="customerIdPrefix" required>
+                <option value="V">V</option>
+                <option value="J">J</option>
+                <option value="G">G</option>
+                <option value="P">P</option>
+                <option value="C">C</option>
+            </select>
+            <input type="number" name="customerId" id="customerId"  oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 9)" required />
+        </div>
+    </fieldset>
+
+    <fieldset >
+        <label for="customer-phone-number_c2p">Número de teléfono:</label>
+        <div>
+            <select name="customerPhonePrefix" id="customerPhonePrefix" required>
+                <option value="414">0414</option>
+                <option value="424">0424</option>
+                <option value="412">0412</option>
+                <option value="416">0416</option>
+                <option value="426">0426</option>
+                <option value="422">0422</option>
+            </select>
+            <input type="number" name="customerPhoneNumber" id="customerPhoneNumber"  oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 8)" required />
+        </div>
+    </fieldset>
+
+    <fieldset >
+        <label for="amount_c2p">Monto:</label><br>
+    <input type="text" name="amount" id="amount"
+        value="{{ '{:,.2f}'.format(montobs|float).replace(',', 'X').replace('.', ',').replace('X', '.') }}"
+        style="text-align: right;" readonly />              
+    </fieldset>
+
+    <fieldset class="twofactor_c2p" >
+        <label for="twofactor_c2p">Clave OTP:</label>
+        <input type="number" name="twofactor" id="twofactor" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 8)" required/>
+    </fieldset>
+
+    <fieldset  style="display: none;">
+        <label for="invoice-number_c2p">Número de factura:</label>
+        <input type="number" name="invoiceNumber"  oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 20)"  />
+    </fieldset>
+    <fieldset>
+    <label for="Banco">Selecciona el Banco:</label>
+    <select id="Banco" name="Banco" onchange="actualizarCodigoBanco()" required>
+        <option value="0104">BANCO VENEZOLANO DE CREDITO(0104)</option>
+        <option value="0105">MERCANTIL(0105)</option>
+        <option value="0108">BANCO PROVINCIAL(0108)</option>
+        <option value="0114">BANCO DEL CARIBE(0114)</option>
+        <option value="0115">BANCO EXTERIOR(0115)</option>
+        <option value="0128">BANCO CARONI(0128)</option>
+        <option value="0137">BANCO SOFITASA (0137)</option>
+        <option value="0138">BANCO PLAZA (0138)</option>
+        <option value="0151">BANCO FONDO COMUN(0151)</option>
+        <option value="0156">100% BANCO(0156)</option>
+        <option value="0157">DELSUR BANCO UNIVERSAL (0157)</option>
+        <option value="0163">BANCO DEL TESORO (0163)</option>
+        <option value="0168">BANCRECER(0168)</option>
+        <option value="0169">R4(0169)</option>
+        <option value="0172">BANCAMIGA BANCO UNIVERSAL (0172)</option>
+        <option value="0174">BANPLUS BANCO UNIVERSAL(0174)</option>
+        <option value="0175">BANCO DIGITAL DE LOS TRABAJADORES(0175)</option>
+        <option value="0178">R4(0178)</option>                                        
+        <option value="0191">BANCO NACIONAL DE CREDITO(0191)</option>
+        <option value="0102">BANCO DE VENEZUELA(0102)</option>
+        <option value="0116">BANCO OCCIDENTAL DE DESCUENTO(0116)</option>
+        <option value="0134">BANESCO(0134)</option>
+        <option value="0166">BANCO AGRICOLA DE VENEZUELA(0166)</option>
+        <option value="0171">BANCO ACTIVO(0171)</option>
+        <option value="0177">BANCO DE LA FUERZA ARMADA NACIONAL BOLIVARIANA (0177)</option>
+    </select>
+    </fieldset>
+
+    <fieldset>
+</fieldset>
+    <button type="submit" class="button">Pagar</button>
+</form>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const formC2PM = document.getElementById("c2pm");
+    const loader = document.getElementById("loaderOverlay");
+
+    if (formC2PM && loader) {
+        formC2PM.addEventListener("submit", function () {
+            loader.classList.add("active");
+        });
+    }
+});
+</script>
+
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="hr2">
+
+                    <div class="menu2">
+                        <div class="header2">
+                            Búsqueda Pago Móvil
+                            <img src="{{ url_for('static', filename='img/Banco_Mercantil_Logo.png') }}" class="mercantil_busqueda">
+                            <span class="clas1">▼</span>
+                        </div>
+                        
+                        <div class="content2">
+                                   
+                                   <p style="color: black; text-align: center; font-size: small;">Monto: {{montobs}}</p>
+                            <form id="bqda_pago_movil_m" action="/searchC2p" method="POST">
+                                <fieldset>
+                                    
+                                    <label for="customer-phone-number">Número de teléfono:</label>
+                                    <div>
+                                        <select id="customer-phone-number-prefix" name="customerPhoneNumberPrefix">
+                                            <option value="414">0414</option>
+                                            <option value="424">0424</option>
+                                            <option value="412">0412</option>
+                                            <option value="416">0416</option>
+                                            <option value="426">0426</option>
+                                        </select>
+                                        <input type="number" id="customer-phone-number" name="customerPhoneNumber" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 8)" required>
+                                    </div>
+                                </fieldset>
+                    
+                                <fieldset>
+                                    <label for="amount">Monto (Prueba)</label><br>
+                                    <input type="text" id="amount" name="amount"  oninput="this.value = this.value.replace(/[^0-9.,]/g, '')" required>
+                                </fieldset>
+                    
+                                <fieldset>
+                                    <label for="paymentReference">Número de referencia</label>
+                                    <input type="number" id="paymentReference" name="paymentReference" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 20)" required/>
+                                </fieldset>
+                    
+                                <fieldset>
+                                    <label for="transaction-date">Fecha de la transacción</label>
+                                    <input type="date" id="transaction-date" name="transactionDate" required/>
+                                </fieldset>
+                    
+                                <button type="submit" class="button">Pagar</button>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <hr class="hr2">
+                    -->
+                  
+                  
+                    <div class="menu2">
+                        <div class="header2">
+                            Busqueda pago movil
+                            <img src="{{ url_for('static', filename='img/logo_mi_banco.png') }}" class="busqueda_pagomovil_mibanco">
+                            <span class="clas1">▼</span>
+                        </div>
+                        <div class="content2">
+                            <div class="scrollable-container">
+                            <div class="main-container">
+                                <h3>Realice un pago movil desde su banco con los siguientes datos:</h3>
+                                <div class="container_info">
+                                    <div class="info_item">
+                                        <p><b>Monto(Bs.):</b> <span class="info_value">{{ '{:,.2f}'.format(montobs|float).replace(',', 'X').replace('.', ',').replace('X', '.') }}</span></p>
+                                        <img src="{{ url_for('static', filename='img/copy.png') }}"class="copy_icon" onclick="copyToClipboard(this)">
+                                        <span class="copied">¡Copiado!</span>
+                                    </div>
+                            
+                                    <div class="info_item">
+                                        <p><b>Número de teléfono:</b> <span class="info_value">04241305189</span></p>
+                                        <img src="{{ url_for('static', filename='img/copy.png') }}"class="copy_icon" onclick="copyToClipboard(this)">
+                                        <span class="copied">¡Copiado!</span>
+                                    </div>
+                            
+                                    <div class="info_item">
+                                        <p><b>RIF:</b> <span class="info_value">J303458025</span></p>
+                                        <img src="{{ url_for('static', filename='img/copy.png') }}"class="copy_icon" onclick="copyToClipboard(this)">
+                                        <span class="copied">¡Copiado!</span>
+                                    </div>
+                            
+                                    <div class="info_item">
+                                        <p><b>Banco:</b> <span class="info_value">R4</span></p>
+                                        <img src="{{ url_for('static', filename='img/copy.png') }}"class="copy_icon" onclick="copyToClipboard(this)">
+                                        <span class="copied">¡Copiado!</span>
+                                    </div>
+                                </div>
+                                <h3>Una vez que realice el pago movil, por favor ingrese los datos de su pago en el siguiente formulario:</h3>
+                                <form id="consulta-form-bpm" action="/bpm_mibanco" method="post">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <fieldset>
+                                        <label for="referencia_bpm">Referencia:</label>
+                                        <input type="text" id="referencia_bpm" name="referencia" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 20)" required>
+                                    </fieldset>
+                                
+                                    <fieldset>
+                                        <label for="customer-phone-number_c2p">Número de teléfono:</label>
+                                        <div>
+                                            <select name="customerPhonePrefix" id="customer-phone-number-destino" required>
+                                                <option value="0414">0414</option>
+                                                <option value="0424">0424</option>
+                                                <option value="0412">0412</option>
+                                                <option value="0416">0416</option>
+                                                <option value="0426">0426</option>
+                                                <option value="0422">0422</option>
+                                            </select>
+                                            <input type="number" name="customerPhoneNumber" id="customerPhoneNumberDestino" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 8)" required />
+                                        </div>
+                                    </fieldset>
+                                    <button id="btnValidarPago" class="button" type="submit">
+                                        Validar Pago
+                                    </button>
+                                </form>  
+                        </div>
+                    </div>
+                </div>
+                <hr class="hr2">
+    
+                <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const form = document.getElementById("consulta-form-bpm");
+            const loader = document.getElementById("loaderOverlay");
+
+            console.log(form);
+            console.log(loader);
+
+            form.addEventListener("submit", function(){
+
+                console.log("SUBMIT");
+
+                loader.classList.add("active");
+
+            });
+
+        });
+        </script>
+                <!--
+                <div class="menu2">
+                    <div class="header2">
+                        Debito Inmediato
+                        <img src="{{ url_for('static', filename='img/logo_mi_banco.png') }}" class="pagomovil_mibanco">
+                        <span class="clas1">▼</span>
+                    </div>
+                    <div class="content2">
+                        <div class="scrollable-container">
+                        <div class="main-container">
+                            <h3>Generar clave de pago</h3>
+                        <div id="flash-container" style="position: relative; z-index: 9999;">
+                        </div>
+                            <form id="otp_mibanco" action="/otp_mibanco" method="POST">
+                                <fieldset>
+                                    <label for="numerotelefono">Número de teléfono:</label>
+                                    <div>
+                                        <select name="customerPhonePrefix" id="customerPhonePrefix" required>
+                                            <option value="0414">0414</option>
+                                            <option value="0424">0424</option>
+                                            <option value="0412">0412</option>
+                                            <option value="0416">0416</option>
+                                            <option value="0426">0426</option>
+                                            <option value="0422">0422</option>
+                                        </select>
+                                        <input type="number" name="customerPhoneNumber" id="customerPhoneNumber" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 7)" required />
+                                    </div>
+                                </fieldset>                                     
+                            
+                            
+                                <fieldset >
+                                    <label for="customerid_c2p">Número de cédula:</label>
+                                    <div>
+                                        <select name="customerIdPrefix" id="customerIdPrefix" required>
+                                            <option value="V">V</option>
+                                            <option value="J">J</option>
+                                            <option value="G">G</option>
+                                            <option value="P">P</option>
+                                            <option value="C">C</option>
+                                        </select>
+                                        <input type="number" name="customerId" id="customerId" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 9)" required />
+                                    </div>
+                                </fieldset> 
+                            
+                                <fieldset>
+                                    <label for="Monto">Monto:</label><br>
+                                    <input type="text" id="Monto" name="Monto" value="{{ '{:,.2f}'.format(montobs|float).replace(',', 'X').replace('.', ',').replace('X', '.') }}" style="text-align: right;" oninput="this.value = this.value.replace(/[^0-9.,]/g, '')" required>
+                                </fieldset> 
+                            
+                                <fieldset>
+                                    <label for="Banco">Selecciona el Banco:</label>
+                                    <select id="Banco" name="Banco" onchange="actualizarCodigoBanco()" required>
+                                        <option value="0104">BANCO VENEZOLANO DE CREDITO(0104)</option>
+                                        <option value="0105">MERCANTIL(0105)</option>
+                                        <option value="0108">BANCO PROVINCIAL(0108)</option>
+                                        <option value="0114">BANCO DEL CARIBE(0114)</option>
+                                        <option value="0115">BANCO EXTERIOR(0115)</option>
+                                        <option value="0128">BANCO CARONI(0128)</option>
+                                        <option value="0137">BANCO SOFITASA (0137)</option>
+                                        <option value="0138">BANCO PLAZA (0138)</option>
+                                        <option value="0151">BANCO FONDO COMUN(0151)</option>
+                                        <option value="0156">100% BANCO(0156)</option>
+                                        <option value="0157">DELSUR BANCO UNIVERSAL (0157)</option>
+                                        <option value="0163">BANCO DEL TESORO (0163)</option>
+                                        <option value="0168">BANCRECER(0168)</option>
+                                        <option value="0169">R4(0169)</option>
+                                        <option value="0172">BANCAMIGA BANCO UNIVERSAL (0172)</option>
+                                        <option value="0174">BANPLUS BANCO UNIVERSAL(0174)</option>
+                                        <option value="0175">BANCO DIGITAL DE LOS TRABAJADORES(0175)</option>
+                                        <option value="0178">BANCO N58(0178)</option>                                        
+                                        <option value="0191">BANCO NACIONAL DE CREDITO(0191)</option>
+                                    </select>
+                                </fieldset> 
+                                    <button class="button" type="submit">Generar clave</button>
+                            </form> 
+                        </div>
+                    </div>
+                </div>   
+                -->
+
+<script>
+document.getElementById('otp_mibanco').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const form = e.target;
+    const formData = new FormData(form);
+    const botonPrincipal = form.querySelector('button[type="submit"]');
+
+    try {
+        const response = await fetch('/otp_mibanco', {
+            method: 'POST',
+            body: formData
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            if (!document.getElementById('otpField')) {
+                // Ocultar botón principal
+                botonPrincipal.style.display = 'none';
+
+                // Crear campo OTP dinámico
+                const otpField = document.createElement('div');
+                otpField.innerHTML = `
+<div class="otp-wrapper">
+    <fieldset id="otpField">
+        <label id="labelOTP" name="labelOTP">Ingresar clave de pago:</label>
+        <input type="text" id="OTP" name="OTP" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 8)"/>
+       
+        <div class="otp-buttons">
+            <button class="button" id="btnPagar" type="button">Pagar</button>
+            <button class="button cancelar-btn" id="btnCancelarOTP" type="button">Cancelar</button>
+
+        </div>
+     </fieldset>
+</div>
+`;
+
+                const separador = document.createElement('div');
+                separador.style.flexBasis = '100%';
+
+                form.appendChild(separador);
+                form.appendChild(otpField);
+
+                // Evento para pagar
+                document.getElementById('btnPagar').addEventListener('click', async () => {
+                    const otp = document.getElementById('OTP').value;
+
+                    if (!otp) {
+                        mostrarFlashMessage("Debe ingresar el OTP", 'danger');
+                        return;
+                    }
+
+                    document.getElementById('loaderOverlay').classList.add('active');
+
+                    try {
+                        const pagarResponse = await fetch('/di_mibanco', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ OTP: otp })
+                        });
+
+                        if (pagarResponse.redirected) {
+                            window.location.href = pagarResponse.url;
+                            return;
+                        }
+
+                        const pagarResult = await pagarResponse.json();
+
+                        if (pagarResult.success) {
+                            mostrarFlashMessage(pagarResult.message, 'payment_success');
+                        } else {
+                            mostrarFlashMessage((pagarResult.message || "Error desconocido"), 'danger');
+                        }
+                    } catch (err) {
+                        mostrarFlashMessage("Error al conectar con el servidor: " + err.message, 'danger');
+                    } finally {
+                        document.getElementById('loaderOverlay').classList.remove('active');
+                    }
+                });
+
+                // Evento para cancelar
+                document.getElementById('btnCancelarOTP').addEventListener('click', () => {
+                    otpField.remove(); // Elimina el campo OTP
+                    botonPrincipal.style.display = 'inline-block'; // Muestra el botón principal
+                });
+            }
+        } else {
+            mostrarFlashMessage(result.message || "Error desconocido", 'danger');
+        }
+
+    } catch (error) {
+        mostrarFlashMessage("Error al conectar con el servidor: " + error.message, 'danger');
+    }
+});
+
+</script>
+<!--
+                        <hr class="hr2">
+                        <div class="menu2">
+                            <div class="header2">Credicard<img src="{{ url_for('static', filename='img/credicard.png') }}" class="credicard" style="height: 150px; float: right;"><span class="clas1">▼</span></div>
+                            <div class="content2">
+                                <div class="scrollable-container">
+                                    <div class="main-container">
+                                    <div id="flash-container-credicard" style="position: relative; z-index: 9999;"></div>   
+
+                                 <form id="credicard_form" method="POST" action="/apis_credicard">
+                                        <fieldset>
+                                            <label for="card_number" id="card_number_label" >Número de Tarjeta:</label>
+                                            <div>
+                                                <select class="form-control" id="card_type" name="card_type"  onchange="toggleFields()"required>
+                                                    <option value="CREDIT">Crédito</option>
+                                                    <option value="DEBIT">Débito</option>
+                                                </select>
+                                                <input type="text" maxlength="20" class="form-control" id="card_number" name="card_number" required></div>
+                                        </fieldset>
+        
+                                 
+                                            <fieldset>
+                                            <label for="holder_name" id="holder_name_label" >Nombre del Titular:</label><br>
+                                            <input type="text" class="form-control" id="holder_name" name="holder_name" maxlength="20"  required>
+                                       
+                                    </fieldset>
+        
+                                    
+                                        <fieldset>
+                                            <label for="cvc" id="cvc_label">CVC:</label><br>
+                                            <input type="text" class="form-control" id="cvc" name="cvc"  oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 3)" required>
+                                        
+                                    </fieldset>
+        
+                                    <fieldset>
+                                        <label for="identificacion" id="identificacion_label">Número de Identificación:</label><br>
+                                        <div>
+                                            <select class="form-control" id="tipo_documento" name="tipo_documento"required>
+                                                <option value="V">V</option>
+                                                <option value="J">J</option>
+                                                <option value="C">C</option>
+                                                <option value="E">E</option>
+                                                <option value="G">G</option>
+                                                <option value="P">P</option>
+                                            </select>
+                                            <input type="text" class="form-control" id="identificacion" name="identificacion"  oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 9)" required>
+                                    </fieldset>
+        
+                                    <fieldset>
+                                        <label for="expiration" id="expiration_label">Expiración (MES/AÑO):</label><br>
+                                        <div class="expiration-group">
+                                            <input type="text" class="form-control" id="expiration_month" name="expiration_month"  placeholder="MM" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 2)" required>
+                                            <input type="text" class="form-control" id="expiration_year" name="expiration_year"  placeholder="AA" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 2)" required>
+                                        </div>
+                                    </fieldset>
+                                        
+                                      
+                                            <fieldset>
+                                            <label for="transaction_amount" id="transaction_amount_label">Monto (Prueba):</label><br>
+                                            <input type="text" class="form-control" id="transaction_amount" name="transaction_amount" value="{{ '{:,.2f}'.format(montobs|float).replace(',', 'X').replace('.', ',').replace('X', '.') }}" style="text-align: right;" oninput="this.value = this.value.replace(/[^0-9.,]/g, '')"  required readonly>
+                                        
+                                    </fieldset><br>
+                                    
+                                    <fieldset>
+                                        <div class="form-group" id="account_type_field" style="display: none;">
+                                           
+                                            <label for="account_type" id="account_type_label">Tipo de Cuenta:</label>
+                                            <select class="form-control" id="account_type" name="account_type">
+                                                <option value="CORRIENTE">Corriente</option>
+                                                <option value="AHORRO">Ahorro</option>
+                                                <option value="PRINCIPAL">Principal</option>
+                                            </select>
+                                        </div>
+                                    </fieldset>
+                                    
+                                    <fieldset>
+                                        <div class="form-group" id="pin_field" style="display: none;">
+                                           
+                                            <label for="pin" id="pin_label">PIN:</label><br>
+                                            <input type="password" class="form-control" id="pin" name="pin" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0,6)"><br><br>
+                                        </div>
+                                    </fieldset>
+                                    <button type="submit" class="button" onclick="enviarFormulario(event)" style="margin-top:-3%;">Enviar</button>
+                                    <div id="otp_contenedor" ></div>
+                                    </form> 
+                                    -->
+                                    
+<script>
+// Mostrar loader antes de cada solicitud y ocultarlo después
+function activarLoader() {
+    document.getElementById("loaderOverlay")?.classList.add("active");
+}
+
+function desactivarLoader() {
+    document.getElementById("loaderOverlay")?.classList.remove("active");
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("credicard_form");
+
+    form.addEventListener("submit", async function (event) {
+        event.preventDefault();
+        activarLoader();
+
+        const formData = new FormData(form);
+        const datosFormulario = {};
+
+        formData.forEach((valor, clave) => {
+            datosFormulario[clave] = valor;
+        });
+
+        try {
+            const response = await fetch("/apis_credicard", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(datosFormulario)
+            });
+
+            if (response.redirected) {
+                window.location.href = response.url;
+                return;
+            }
+
+            const data = await response.json();
+
+            if (data.mostrar_otp) {
+                mostrarCampoOTP(data.message || "Por favor ingresa el código OTP.", data.requiere_telefono);
+            } else if (data.message) {
+                mostrarFlashCredicard(data.message, 'danger');
+            } else {
+                mostrarFlashCredicard("Error interno al comunicarse con credicard, intente de nuevo más tarde.", 'danger');
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            mostrarFlashCredicard("Error al procesar la solicitud, intente de nuevo más tarde.", 'danger');
+        } finally {
+            desactivarLoader();
+        }
+    });
+});
+
+function mostrarCampoOTP(mensaje, requiereTelefono = false) {
+    if (!document.getElementById("otp_input")) {
+        const otpField = document.createElement("fieldset");
+        otpField.id = "otp_fieldset";
+        otpField.style.display = "block";
+        otpField.style.marginTop = "20px";
+
+        let html = `
+            <p id="otp_message" style="color: #007bff; font-weight: bold;">${mensaje}</p>
+            <label for="otp_input">Ingresa el código OTP:</label><br>
+            <input type="text" class="form-control" id="otp_input" name="otp_input" maxlength="6"
+                   oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 6)"><br><br>
+        `;
+
+        if (requiereTelefono) {
+            html += `
+                <label for="numerotelefono">Numero de Teléfono:</label><br>
+                <select name="customerPhonePrefix" id="otpCustomerPhonePrefix" required>
+                    <option value="0414">0414</option>
+                    <option value="0424">0424</option>
+                    <option value="0412">0412</option>
+                    <option value="0416">0416</option>
+                    <option value="0426">0426</option>
+                    <option value="0422">0422</option>
+                </select>
+                <input type="number" name="customerPhoneNumber" id="otpCustomerPhoneNumber" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 8)" required />                        
+            `;
+        }
+
+        html += `<button type="button" class="button" id="btnPagar" onclick="enviarOTP()" style="margin-top:2%;">Enviar OTP</button>`;
+        otpField.innerHTML = html;
+
+        const contenedor = document.getElementById("otp_contenedor");
+        if (contenedor) {
+            contenedor.appendChild(otpField);
+        } else {
+            console.warn("No se encontró el contenedor #otp_contenedor. Agrega <div id='otp_contenedor'></div> debajo del botón Enviar.");
+        }
+    } else {
+        const mensajeOTP = document.getElementById("otp_message");
+        if (mensajeOTP) {
+            mensajeOTP.textContent = mensaje;
+        }
+    }
+}
+
+async function enviarOTP() {
+    activarLoader();
+    const otp = document.getElementById("otp_input")?.value.trim();
+    const phonePrefix = document.getElementById("otpCustomerPhonePrefix")?.value.trim() || "";
+    const phoneNumber = document.getElementById("otpCustomerPhoneNumber")?.value.trim() || "";
+
+    const payload = { otp: otp };
+
+    if (phonePrefix && phoneNumber) {
+        payload.customerPhonePrefix = phonePrefix;
+        payload.customerPhoneNumber = phoneNumber;
+    } else if (document.getElementById("otpCustomerPhonePrefix")) {
+        mostrarFlashCredicard("Por favor ingresa el número de teléfono." , 'danger');
+        desactivarLoader();
+        return;
+    }
+
+    try {
+        const response = await fetch("/token_banco_credicard", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        });
+
+        if (response.redirected) {
+            window.location.href = response.url;
+            return;
+        }
+
+        const data = await response.json();
+
+        if (data.message) {
+            mostrarFlashCredicard(data.message || 'payment_success');
+        } else if (data.error) {
+            mostrarFlashCredicard("Error: " + data.error , 'danger');
+        } else {
+            mostrarFlashCredicard("Error interno al comunicarse con credicard, intente de nuevo más tarde." , 'danger');
+        }
+    } catch (error) {
+        console.error("Error al enviar OTP:", error);
+        mostrarFlashCredicard("Error al procesar la solicitud, intente de nuevo más tarde." , 'danger');
+    } finally {
+        desactivarLoader();
+    }
+}
+</script>                                                                                                                                         
+                    </div>
+                </div>
+            </div>
+            <hr class="hr3">
+                </div>
+            </div> 
+                                                                                                                                                   
+        </div>
+    </div>
+</div>
+
+    </div>
+</div>
+
+<div id="session-expired-modal">
+    <div id="session-expired-content">
+        <p id="session-expired-message">Tu tiempo de sesión ha expirado. ¿Quieres extenderla?</p>
+        <div id="session-expired-buttons">
+            <button class="session-button" onclick="extendSession()">Extender Sesión</button>
+            <button id="logout-button" class="session-button" onclick="logout()">Cerrar Sesión</button>
+        </div>
+    </div>
+</div>
+
+
+    <script src="{{url_for('static', filename='js/menuspago.js')}}"></script>      
+    <script src="{{url_for('static', filename='js/icusuario.js')}}"></script> 
+
+    <script>
+    function copyToClipboard(element) {
+    const value = element.parentElement.querySelector('.info_value').textContent.trim();
+    if (!navigator.clipboard) {
+        // fallback para navegadores antiguos
+        const textArea = document.createElement('textarea');
+        textArea.value = value;
+        document.body.appendChild(textArea);
+        textArea.select();
+        try {
+        document.execCommand('copy');
+        showCopiedMessage(element);
+        } catch (err) {
+        console.error('Error al copiar con fallback:', err);
+        }
+        document.body.removeChild(textArea);
+        return;
+    }
+
+    navigator.clipboard.writeText(value).then(() => {
+        showCopiedMessage(element);
+    }).catch(err => {
+        console.error('Error al copiar:', err);
+    });
+    }
+
+    function showCopiedMessage(element) {
+    const copiedMessage = element.parentElement.querySelector('.copied');
+    copiedMessage.style.display = 'inline';
+    setTimeout(() => {
+        copiedMessage.style.display = 'none';
+    }, 1500);
+    }
+    </script>
+    <script>
+        function toggleFields() {
+        var cardType = document.getElementById("card_type").value;
+        var accountTypeField = document.getElementById("account_type_field");
+        var pinField = document.getElementById("pin_field");
+
+        if (cardType === "DEBIT") {
+        accountTypeField.style.display = "block"; // Muestra el campo de tipo de cuenta
+        pinField.style.display = "block"; // Muestra el campo de PIN
+        } else {
+        accountTypeField.style.display = "none"; // Oculta el campo de tipo de cuenta
+        pinField.style.display = "none"; // Oculta el campo de PIN
+        }
+        }
+    </script>
+
+    <script>
+function mostrarFlashMessage(message, category) {
+    const flashContainer = document.getElementById('flash-container');
+    if (!flashContainer) return;
+
+    const flashMessage = document.createElement('div');
+    flashMessage.className = `flash-message ${category === 'payment_success' ? 'success' : 'error'}`;
+    flashMessage.innerHTML = `
+        <p>${message}</p>
+        <img src="/static/img/pagonegado.png" alt="Pago negado" class="flash-icon" style="max-width: 50px; margin-bottom: 10px;">
+        <div style="margin-top: 10px;">
+          <button id="closeFlashError" class="btn btn-primary btn-sm close-flash-btn">Aceptar</button>
+        </div>
+    `;
+
+    flashMessage.classList.add('show');
+    flashContainer.appendChild(flashMessage);
+
+    // Agregar evento al botón recién creado
+    const closeBtn = flashMessage.querySelector('.close-flash-btn');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', function () {
+            flashMessage.remove();
+        });
+    }
+}
+
+</script>
+
+<script>
+function mostrarFlashCredicard(message, category = 'danger') {
+    console.log("Credicard flash:", message);  
+
+    let flashContainer = document.getElementById('flash-container-credicard');
+
+    if (!flashContainer) {
+        flashContainer = document.createElement('div');
+        flashContainer.id = 'flash-container-credicard';
+        document.body.appendChild(flashContainer);
+    }
+
+    const flashMessage = document.createElement('div');
+    flashMessage.className = `flash-message-credicard ${category}`;
+    flashMessage.innerHTML = `
+        <p>${message}</p>
+        <img src="/static/img/pagonegado.png" alt="Pago negado" class="flash-icon" style="max-width: 50px; margin-bottom: 10px;">
+        <div style="margin-top: 10px;">
+          <button id="closeFlashError"  class="btn btn-primary btn-sm close-flash-btn">Aceptar</button>
+        </div>
+    `;
+
+    flashMessage.classList.add('show');
+    flashContainer.appendChild(flashMessage);
+
+    // Cerrar al hacer clic en "Aceptar"
+    const closeBtn = flashMessage.querySelector('.close-flash-btn');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', function () {
+            flashMessage.remove();
+        });
+    }
+}
+
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const flashError = document.getElementById("flashMessage");
+  const btnCerrarError = document.getElementById("closeFlashError");
+
+  // Mostrar el flash si existe contenido
+  if (flashError && flashError.innerText.trim() !== "") {
+    flashError.style.display = "block";
+  }
+
+  // Cerrar el mensaje de error con el botón
+  if (btnCerrarError) {
+    btnCerrarError.addEventListener("click", function () {
+      flashError.style.display = "none";
+    });
+  }
+});
+</script>
+
+<!-- Loader -->
+<div id="loaderOverlay" class="loader-overlay">
+    <div class="loader-content">
+        <div class="spinner"></div>
+        <p>Validando pago, por favor espere...</p>
+    </div>
+</div>
+</body>
+</html>

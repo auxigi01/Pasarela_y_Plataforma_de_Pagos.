@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/info_bancaria.css')}}">
+    <title>Formulario de Pago</title>
+    <link rel="icon" href="{{ url_for('static', filename='img/logo_rojo_rescarven.png') }}" type="image/png">
+    <style>
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+    
+    <div class="main-container">
+    <h2>Formulario de Pago</h2>
+    <form id="paymentForm" action="/pago_credicard" method="POST">
+        <fieldset>
+        <label for="country">País:</label>
+        <input type="text" id="country" name="COUNTRY" value="{{ bank_info.country }}" readonly>
+    </fieldset>
+    
+        <fieldset>
+        <label for="amount">Monto:</label>
+        <input type="text" id="amount" name="AMOUNT" value="{{ comision_detalle.amount_formatted | replace('Bs. ', '') | replace(',', '.') }}" required>
+    </fieldset>
+
+    <fieldset> 
+        <label for="currency">Moneda:</label>
+        <input type="text" id="currency" name="CURRENCY" value="VES" readonly>
+    </fieldset>   
+
+    <fieldset>
+        <!-- Selección de tipo de tarjeta -->
+        <label for="cardType">Tipo de Tarjeta:</label>
+        <select id="cardType" name="CARD_TYPE" required onchange="toggleCardFields()">
+            <option value="DEBIT" {% if card_type == 'DEBIT' %}selected{% endif %}>Débito</option>
+            <option value="CREDIT" {% if card_type == 'CREDIT' %}selected{% endif %}>Crédito</option>
+        </select>
+    </fieldset>
+    
+    <fieldset>
+        <label for="cardNumber">Número de Tarjeta:</label>
+        <input type="text" id="cardNumber" name="CARD_NUMBER" value="{{ card_number }}" pattern="\d{1,19}" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 20)" required>
+    </fieldset>
+
+    <fieldset>
+        <label for="expiration" id="expiration_label">Expiración (MES/AÑO):</label><br>
+        <div class="expiration-group">
+            <input type="text" class="form-control" id="expirationMonth" name="EXPIRATION_MONTH"  placeholder="MM" value="{{ expiration_month }}" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 2)" min="1" max="12" required>
+            <input type="text" class="form-control" id="expirationYear" name="EXPIRATION_YEAR"  placeholder="AA"  value="{{ expiration_year }}" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 2)"  min="0" max="99" required>
+        </div>
+    </fieldset>
+    
+   
+    <fieldset>
+        <label for="holderName">Nombre del Titular:</label>
+        <input type="text" id="holderName" name="HOLDER_NAME" value="{{ holder_name }}" required>
+    </fieldset>
+    
+    <fieldset>
+        <label for="holderIdDoc">Identificación del Titular:</label>
+        <select id="holderIdDoc" name="HOLDER_ID_DOC" required>
+            <option value="CI" {% if holder_id_doc == 'CI' %}selected{% endif %}>CI</option>
+            <option value="RIF" {% if holder_id_doc == 'RIF' %}selected{% endif %}>RIF</option>
+        </select>
+    </fieldset>
+    
+    <fieldset>
+        <label for="holderId">Documento de Identidad:</label>
+        <input type="text" id="holderId" name="HOLDER_ID" value="{{ identificacion }}" pattern="[VJCEGP]\d{9}" maxlength="10" minlength="10" required>
+    </fieldset>
+    
+    <fieldset id="accountTypeFieldset">
+        <label for="accountType">Tipo de Cuenta:</label>
+        <select id="accountType" name="ACCOUNT_TYPE" required>
+            <option value="AHORRO" {% if account_type == 'AHORRO' %}selected{% endif %}>Ahorro</option>
+            <option value="CORRIENTE" {% if account_type == 'CORRIENTE' %}selected{% endif %}>Corriente</option>
+        </select>
+    </fieldset>
+
+    <fieldset id="pinFieldset">
+        <label for="pin">PIN de la Tarjeta:</label>
+        <input type="password" id="pin" name="PIN" value="{{ pin }}" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0,5)">
+    </fieldset>
+      
+
+    
+    <fieldset id="cvcFieldset">
+        <label for="cvc">CVC:</label>
+        <input type="text" id="cvc" name="CVC" value="{{ cvc }}" pattern="\d{3,4}" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 4)" required>
+    </fieldset>
+    
+        <button class="button" type="submit">Enviar Pago</button>
+    </form>
+    <div id="flashMessage" class="flash-message">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    {% if category == 'payment_success' %}
+                        <p class="success">{{ message }}</p>
+                        <img src="{{ url_for('static', filename='img/pagoaprobado.png') }}" alt="Pago aprobado">
+                    {% elif category == 'payment_error' %}
+                        <p class="error">{{ message }}</p>
+                        <img src="{{ url_for('static', filename='img/pagonegado.png') }}" alt="Pago negado">
+                    {% elif category == 'payment_credicard_error' %}
+                        <p class="error">{{ message }}</p>
+                        <img src="{{ url_for('static', filename='img/pagonegado.png') }}" alt="Error de Credicard">
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>  
+<script>
+    function toggleCardFields() {
+        const cardType = document.getElementById('cardType').value;
+        const accountTypeFieldset = document.getElementById('accountTypeFieldset');
+        const pinFieldset = document.getElementById('pinFieldset');
+        const cvcFieldset = document.getElementById('cvcFieldset');
+
+        if (cardType === 'CREDIT') {
+            accountTypeFieldset.style.display = 'none';
+            pinFieldset.style.display = 'none';
+            cvcFieldset.style.display = 'block'; // Mostrar CVC
+        } else {
+            accountTypeFieldset.style.display = 'block'; // Mostrar Tipo de Cuenta
+            pinFieldset.style.display = 'block'; // Mostrar PIN
+            cvcFieldset.style.display = 'none'; // Ocultar CVC
+        }
+    }
+
+    // Llamar a la función al cargar la página para establecer el estado inicial
+    window.onload = toggleCardFields;
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const flashMessage = document.getElementById('flashMessage');
+        if (flashMessage && flashMessage.innerText.trim() !== '') {
+            flashMessage.style.display = 'block'; // Muestra el mensaje
+            
+            // Ocultar automáticamente después de 5 segundos (opcional)
+            setTimeout(() => {
+                flashMessage.style.display = 'none';
+            }, 9000);
+        }
+    });
+</script>
+</body>
+</html>

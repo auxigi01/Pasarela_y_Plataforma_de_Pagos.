@@ -1,0 +1,69 @@
+body {
+    background-image: url('fondo_credicard.jpg');
+    background-size: cover;       
+    background-repeat: no-repeat; 
+    background-position: center; 
+    background-attachment: fixed; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .container {
+    background: white;
+    padding: 2em;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    max-width: 350px;
+    width: 100%;
+    max-height: 150px;
+    height: 100%;
+  }
+
+  h2 {
+    margin-top:-3%;
+    text-align: center;
+    color: #555;
+  }
+  input[type="text"] {
+    margin-top: -3%;
+    width: 100%;
+    padding: 10px;
+    font-size: 1em;
+    border-radius: 15px;
+    border: 1px solid #333;
+  }
+
+input[type="submit"] {
+  color: white;
+  padding: 0.5em 1.5em;
+  font-size: 15px;
+  border-radius: 0.5em;
+  background: #03519E;
+  cursor: pointer;
+  border: 1px solid #e8e8e8;
+  display: block; /* Permite centrar el botón */
+  position: relative;
+  margin: 1px auto; /* Centra el botón horizontalmente */
+  max-width: 160px; /* Ancho máximo del botón */
+  width: 100%; /* Ancho completo en pantallas pequeñas */
+  margin-top: 10px; /* Espacio superior */
+}
+
+.success {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+}
+
+.error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+}

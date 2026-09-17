@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/paginaprincipal.css')}}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio</title>
+    <link rel="icon" href="{{ url_for('static', filename='img/logo_rojo_rescarven.png') }}" type="image/png">
+
+</head>
+<body>
+
+    <div class="content">
+        <div class="sidebar">
+            <div class="logo">
+                <div class="menu-hamburguesa-container">
+                    <div class="menu-hamburguesa">&#9776;</div>
+                </div>
+                <img src="{{ url_for('static', filename='img/logo_rescarven.png') }}" alt="Logo" style="width:210px; height: 200px">
+            </div>
+            <nav class="menu" id="nav_menu">
+                <ul class="nav-list">
+                    <li class="active"><a href="{{url_for('paginaprincipal')}}">Inicio</a></li>
+                    <li><a href="{{url_for('info_planes')}}">Planes</a></li>
+                    <li><a href="{{url_for('recibo_de_pago')}}">Consultas</a></li>
+
+                    
+                </ul>
+            </nav>
+        </div>
+        <div class="container">
+            
+            <div class="main-content">
+                <header class="top-bar">
+                    <div class="cerrar-sesion-contenedor">
+                        <img src="{{ url_for('static', filename='img/cerrar_sesion.png') }}" class="cerrar_sesion" alt="Cerrar sesión">
+                        <a id="salir" name="salir" class="salir" href="{{ url_for('logout') }}" oncontextmenu="return false;">Cerrar sesión</a>
+                    </div>
+                    <div class="user-icon">
+                        <div class="dropdown">
+                            <div class="menu-button" onclick="toggleDropdown()">
+                                <img src="{{ url_for('static', filename='img/usuario.png') }}" alt="Usuario">
+                            </div>
+                            <div class="dropdown-content" id="dropdown-menu">
+                                <div class="user-name"> {{ nombre }} {{ apellido }}</div>
+                                <a href="{{ url_for('cambiar_contraseña') }}">Cambiar Contraseña</a>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+
+                 
+                {% if success %}
+                <div class="alert alert-success">
+                    Su transacción fue aprobada exitosamente.
+                    <span class="close-btn">&times;</span>
+                </div>
+                {% endif %}
+                <div class="contenido">
+                    <b><div class="parrafo__pequeno"><p>¡Usted ha entrado a la página de pagos de Rescarven!</p></div></b>
+                    <img src="{{ url_for('static', filename='img/letras_de_fondo.png') }}" id="letras_de_fondo" style="float:left">
+                    <img src="{{ url_for('static', filename='img/tel_rscv.png') }}" id="imgprincipal" style="float:left;  height: 450px";>
+                    
+                    <h3 style="float: right;">¡BIENVENIDO(A) {{ nombre }} {{ apellido }}!</h3>
+                    <b><p style="float: right;" class="text_ini">Realiza tu pago de manera rápida y segura</p></b>
+                    
+                     
+                    <p style="float: right;" class="text_secu">Su comodidad es nuestra prioridad. Complete su transacción en sencillos pasos:</p>
+                    
+                    
+                    <div class="cards">
+                        <div class="card red">
+                            <p class="second-text">Seleccione el contrato en la sección de Planes</p>
+                        </div>
+                        <div class="card blue">
+                            <p class="second-text">Elige las cuotas a pagar </p>
+                        </div>
+                        <div class="card green">
+                            <p class="second-text">Seleccione el método de pago y confirme la transacción</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <div id="session-expired-modal">
+        <div id="session-expired-content">
+            <p id="session-expired-message">Tu tiempo de sesión ha expirado. ¿Quieres extenderla?</p>
+            <div id="session-expired-buttons">
+                <button class="session-button" onclick="extendSession()">Extender Sesión</button>
+                <button id="logout-button" class="session-button" onclick="logout()">Cerrar Sesión</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{url_for('static', filename='js/icusuario.js')}}"></script>
+
+</body>
+</html>

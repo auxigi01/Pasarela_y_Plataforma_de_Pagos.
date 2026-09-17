@@ -1,0 +1,1892 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Montserrat';
+    background-color: rgb(3, 81, 158, 0.3);
+    position: relative;
+    background-size: cover; 
+    background-repeat: no-repeat;
+    background-position: center; 
+    overflow: hidden;
+ }
+
+.content {
+    position: relative;
+    z-index: 1;
+    padding: 20px;
+    color: white;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    width: 93.5%;
+    margin: 20px 1.8%;
+    padding: 20px;
+    background-color: white;
+    border-radius: 60px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5), 0 30px 70px rgba(0, 0, 0, 0.5);
+    position: relative;
+    z-index: 1;
+    overflow-y: hidden;
+    overflow-x: hidden;
+    min-height: 568px; 
+}
+
+/* Media query para pantallas muy grandes (ajustable) */
+@media (min-width: 481px) {
+    .container {
+        width: 90%; 
+        min-height: 86vh;
+        padding: 30px; 
+        margin: 20px auto;
+    }
+    
+}
+
+@media (max-width: 480px) {
+    .container {
+        height: 90vh; 
+        min-height: auto; 
+        margin: 0 1.8%; 
+    }
+}
+
+.container {
+    margin-top: -1vh; 
+}
+
+
+.sidebar {
+    width: 20%;
+    min-height: 610px;
+    max-width: 400px;
+    min-width: 200px;
+    height: auto;
+    background: #03519E;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 60px;
+    margin-left: 1.5%;
+    z-index: 2;
+    position: absolute;
+    transition: width 0.3s ease, height 0.3s ease;
+}
+
+.sidebar{
+    margin-top: -1vh;
+}
+/* Ajustes para pantallas grandes */
+@media (min-width: 1600px) {
+    .sidebar {
+        width: 22%; 
+        min-height: 93vh;
+        max-width: 450px; 
+        padding: 20px; 
+        font-size: 1.2vw; 
+    }
+
+}
+@media (min-width: 768px){
+    .sidebar{
+        min-height: 95vh; 
+        padding: 2px; 
+        font-size: 2.2vw; 
+}
+}
+/* Estilo del menú */
+.menu {
+    width: 100%;
+    margin-top: -14%;
+}
+
+.menu ul {
+    list-style-type: none;
+    padding: 0;
+    width: 100%;
+}
+
+.menu li {
+    width: 93%;
+    margin: 10px 0;
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
+    margin-left: 10%;
+}
+
+.menu a {
+    text-decoration: none;
+    margin-left: 15%;
+    color: white;
+    display: block;
+    width: 100%;
+    padding: 10px 0;
+    position: relative;
+    z-index: 1;
+    transition: color 0.4s;
+    font-size: 20px;
+    border-radius: 10px;
+}
+
+.menu li::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: -100%;
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    z-index: 0;
+    transition: right 0.4s;
+    border-radius: 10px;
+}
+
+.menu li:hover::before,
+.menu li.active::before {
+    right: 0;
+}
+
+/* Animación del hover */
+.menu li:hover a,
+.menu li.active a {
+    color: #333 !important; 
+}
+
+.menu-hamburguesa{
+    display: none;
+}
+
+/* Media query para pantallas pequeñas */
+@media (max-width: 768px) {
+ /* Estilos base del sidebar (cerrado) */
+.sidebar {
+    min-width: 50px;
+    max-width: 50px;
+    height: 100%;
+    position: fixed;
+    left: 0;
+    top: 0;
+    overflow: hidden;
+    background-color: #03519E;
+    transition: min-width 0.4s ease, max-width 0.4s ease; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+    /* Sidebar abierto (con la clase `.open` agregada) */
+    .sidebar.open {
+        min-width: 130px;
+        max-width: 130px;
+}
+ /* Oculta el contenido interno por defecto */
+    .sidebar .menu ul {
+    display: none;
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+    transform: translateX(-20px); 
+}
+
+
+/* Muestra el contenido cuando el sidebar tiene la clase `.open` */
+.sidebar.open .menu ul {
+    display: block;
+    transform: translateX(0); 
+    margin-top: 160px;
+}
+
+
+.nav-list{
+    flex-direction: column;
+}
+
+.menu-hamburguesa-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    width: 60px; /* Ajusta el ancho */
+    height: 60px; /* Ajusta la altura */
+    position: relative;
+    z-index: 1000; /* Asegura que esté encima de otros elementos */
+}
+.menu-hamburguesa {
+    display: block;
+    text-align: center;
+    font-size: 30px;
+    color: white;
+    margin-top: 100px;
+}
+
+.logo img {
+    display: none;
+}
+}
+.top-bar {
+    width: 100%;  
+    height: 70px;  
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0 20px; 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-top-right-radius: 60px;
+    border-top-left-radius: 60px;
+    z-index: 1;
+    position: absolute; 
+    top: 0;  
+    left: 0;  
+    margin: 0; 
+}
+
+/* Contenedor para mantener juntos el ícono y el texto de cerrar sesión */
+.cerrar-sesion-contenedor {
+    display: flex;
+    align-items: center;
+}
+
+
+.user-icon img {
+    margin-right: 50px; 
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.user-icon img:hover {
+    transform: scale(1.1);
+}
+
+.salir {
+    text-decoration: none; 
+    color: #0055a5;
+    margin-right: 10px;
+    font-size:20px;
+    white-space: nowrap; 
+}
+
+.cerrar_sesion{
+    height: 35px;
+    margin-right: 10px;
+    margin-right: 10px;
+    transition: all 0.3s ease;
+}
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    top: 70px;
+    right: 0;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1001;
+    border-radius: 8px;
+    border: 5px solid #f9f9f9;
+}
+
+.dropdown-content .user-name {
+    padding: 12px 16px;
+    border-bottom: 1px solid #ddd;
+    color: black;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    border-radius: 8px;
+}
+
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
+}
+
+.show {
+    display: block;
+}
+
+
+/* Estilos Responsivos para dispositivos más pequeños */
+
+@media (min-width: 1500px){
+    .cerrar-sesion-contenedor {
+        margin-left: auto;  
+    }
+    .user-icon img {
+        width: 55px;  
+        height: 55px;
+        margin-right: 60px;    }
+
+    .salir {
+        font-size: 25px; 
+        margin-right: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .top-bar {
+        width: 100%;
+        padding: 0 10px;
+        justify-content: space-between; 
+        height: 60px; 
+    }
+
+    .cerrar-sesion-contenedor {
+        margin-left: auto; 
+    }
+    .user-icon img {
+        width: 45px; 
+        height: 45px;
+        margin-right: 50px;    }
+
+    .salir {
+        font-size: 22px;  
+        margin-right: 15px;  
+    }
+
+    .cerrar_sesion {
+        height: 35px;  
+    }
+
+
+
+    .dropdown-content {
+        right: 10px; 
+    }
+    .menu a {
+        text-decoration: none;
+        margin-left: 15%;
+        color: white;
+        display: block;
+        width: 100%;
+        padding: 10px 0;
+        position: relative;
+        z-index: 1;
+        transition: color 0.4s;
+        font-size: 17px;
+        border-radius: 10px;
+    }
+}
+
+
+
+@media  (max-width: 480px) {
+    .top-bar {
+        width: 100%;
+        height: 60px;
+        justify-content: space-between;
+    }
+
+    .cerrar-sesion-contenedor {
+        margin-left: auto;
+    }
+
+    .user-icon img {
+        width: 45px;
+        height: 45px;
+        margin-right: 50px;
+    }
+
+    .salir {
+        font-size: 25px;
+        margin-right: 15px;
+    }
+
+    .cerrar_sesion {
+        height: 35px;
+    }
+    .menu a {
+        text-decoration: none;
+        margin-left: 15%;
+        color: white;
+        display: block;
+        width: 100%;
+        padding: 10px 0;
+        position: relative;
+        z-index: 1;
+        transition: color 0.4s;
+        font-size: 15px;
+        border-radius: 10px;
+    }
+
+
+}
+
+@media screen and (max-width: 385px) {
+    .top-bar {
+        height: 60px;
+        justify-content: space-between;
+    }
+
+    .cerrar-sesion-contenedor {
+        margin-left: auto;
+    }
+
+    .user-icon img {
+        width: 35px;
+        height: 35px;
+        margin-right: 30px;
+    }
+
+    .salir {
+        font-size: 18px;
+        margin-right: 15px;
+    }
+
+    .cerrar_sesion {
+        height: 25px;
+    }
+    .menu a {
+        text-decoration: none;
+        margin-left: 15%;
+        color: white;
+        display: block;
+        width: 100%;
+        padding: 10px 0;
+        position: relative;
+        z-index: 1;
+        transition: color 0.4s;
+        font-size: 15px;
+        border-radius: 10px;
+    }
+
+
+}
+
+.contenido {
+    width: 75%; 
+    height: auto; 
+    min-height: 80%; 
+    max-height: 80%;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    border-radius: 25px;
+    position: absolute; 
+    top: 13%; 
+    left: 60%;
+    transform: translateX(-50%);
+    padding: 20px;
+    overflow-y: auto;
+}
+
+
+@media screen and (max-width: 768px) {
+    .contenido {
+        width: 90%; 
+        left: 50%; 
+        height: auto;
+        overflow: auto;
+    }
+}
+@media screen and (max-width: 480px) {
+    .contenido {
+        width: 90%; 
+        height: auto;
+        overflow: auto;
+    }
+}
+
+h1 {
+    font-size:22px;
+    margin-top: 3%;
+    margin-left: 3%;
+    color: black;
+}
+
+.clickable-row{
+    cursor: pointer;
+}
+
+#stabla-container {
+    max-height:48%; 
+    overflow-y: auto;
+    display: inline-block; 
+    width: 95%; 
+    padding: 0;
+    margin-left: 3%;
+    margin-top:1%;
+    border-radius: 10px; 
+}
+
+
+/* Estilos generales para el header2 */
+.header2 {
+    display: flex;
+    justify-content: space-between;
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: rgb(71, 71, 71);
+    margin-left: 25%; 
+    align-items: center; 
+} 
+.content2 {
+    padding: 20px;
+    overflow-y: auto;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    transition: opacity 0.5s ease, transform 0.5s ease; 
+    opacity: 0; 
+    transform: translateY(-20px); 
+    display: none; 
+}
+
+.content2.show {
+    opacity: 1;
+    transform: translateY(0); 
+    display: block; 
+}
+
+
+.mercantil_pagomovil,
+.mercantil,
+.mercantil_busqueda{
+    height: auto; 
+    max-height: 6vw; 
+    width: auto;
+}
+
+.mercantil_pagomovil{
+    margin-left: 15px;
+}
+.mercantil_busqueda{
+    margin-right: 45px;
+}
+.busqueda_pagomovil_mibanco{
+    margin-right: 40px;
+}
+
+.pagomovil_mibanco,
+.busqueda_pagomovil_mibanco{
+    height: auto; 
+    max-height: 4.5vw; 
+    width: auto;
+}
+   
+ .credicard{
+    height: auto; 
+    max-height: 8vw; 
+    width: auto;
+ }   
+
+ .credicard{
+    margin-top: -2%;
+ }   
+
+
+
+/* Menu contenedor */
+.menu2 {
+    margin-top: -5%;
+}
+
+hr{
+    border: 2px inset #eee; 
+    height: 1px; 
+    width: 80%;
+    margin-top: 1%;
+}
+.hr1{
+    margin-top: -1%;
+}
+
+.hr3{
+    margin-top: -2%;
+}
+
+.clas1 {
+    margin-right: 70px;
+}
+
+
+/* Ajustes del contenedor cuando el tamaño de pantalla es pequeño */
+
+@media (max-width: 1000px) {
+    .mercantil_busqueda{
+        margin-right: 55px;
+
+    }
+}
+@media (max-width: 950px) {
+    .mercantil_busqueda{
+        margin-right: 45px;
+    }
+}
+
+@media (max-width: 910px) {
+    .mercantil_busqueda{
+        margin-right: 40px;
+    }
+}
+
+@media (max-width: 850px) {
+    .mercantil_busqueda{
+        margin-right: 30px;
+    }
+}
+
+@media (max-width: 800px) {
+    .header2 {
+        flex-direction: column; /* Cambia la disposición a columna en pantallas pequeñas */
+        align-items: center; /* Centra el contenido */
+        margin-left: 0;
+        font-size: 1.2rem; /* Ajusta el tamaño de la fuente */
+    }
+
+    .mercantil_pagomovil,
+    .mercantil,
+    .mercantil_busqueda {
+        max-height: 10vw; /* Ajusta la altura de la imagen en pantallas pequeñas */
+        width: auto;
+    }
+
+    .pagomovil_mibanco,
+    .busqueda_pagomovil_mibanco{
+    max-height: 8vw; /* Limita la altura máxima en relación al ancho de la pantalla */
+    width: auto;
+}
+
+.credicard{
+    max-height: 10vw; /* Limita la altura máxima en relación al ancho de la pantalla */
+    width: auto;
+ }   
+
+ .credicard{
+    margin-top: 2%;
+ }   
+
+    .busqueda_pagomovil_mibanco{
+        margin-right: -10px;
+    }
+
+    .mercantil{
+        margin-left: 25px;
+
+    }
+    .mercantil_busqueda{
+        margin-right: -10px;
+
+    }
+
+    .clas1 {
+        margin-top: 10px; /* Añade un poco de espacio arriba de la flecha en pantallas pequeñas */
+        margin-right: -5px;
+    }
+
+    .menu2 {
+        margin-top: 5%;
+    }
+}
+
+/* Para pantallas más grandes */
+@media (min-width: 769px) {
+    .menu2 {
+        margin-top: 3%; /* Ajusta el margen en pantallas grandes */
+    }
+}
+
+@media (max-width: 560px) {
+    .mercantil_pagomovil,
+    .mercantil,
+    .mercantil_busqueda {
+        max-height: 12vw; /* Ajusta la altura de la imagen en pantallas pequeñas */
+        width: auto;
+    }
+    .pagomovil_mibanco,
+    .busqueda_pagomovil_mibanco{
+    max-height: 10vw; /* Limita la altura máxima en relación al ancho de la pantalla */
+    width: auto;
+}
+
+
+.credicard{
+    max-height: 15vw; /* Limita la altura máxima en relación al ancho de la pantalla */
+    width: auto;
+ }   
+
+}
+@media (max-width: 440px) {
+    .mercantil_pagomovil,
+    .mercantil,
+    .mercantil_busqueda {
+        max-height: 15vw; /* Ajusta la altura de la imagen en pantallas pequeñas */
+        width: auto;
+    }
+    .pagomovil_mibanco,
+    .busqueda_pagomovil_mibanco{
+    max-height: 12vw; /* Limita la altura máxima en relación al ancho de la pantalla */
+    width: auto;
+}
+
+.credicard{
+    max-height: 20vw; /* Limita la altura máxima en relación al ancho de la pantalla */
+    width: auto;
+ }   
+}
+
+h2{
+    color: black;
+    font-size: 1.2rem;
+    text-align: center;
+}
+
+@media (max-width: 645px) {
+    h2{
+        margin-left: 20px;
+    }
+}
+
+@media (max-width: 540px) {
+    h2{
+        margin-left: 20px;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 840px)  {
+    h2{
+        margin-left: 50px;
+        font-size: 1.1rem ;
+    }
+}
+@media (min-width: 350px) and (max-width: 453px)  {
+    @media (min-height: 800px) and (max-height: 1400px) {
+        .header2{
+            font-size: 1.2rem;
+        }
+    }
+   }
+
+@media (min-width: 768px) and (max-width: 800px)  {
+@media (min-height: 800px) and (max-height: 1400px) {
+    .header2{
+        font-size: 1.4rem;
+    }
+}
+}
+
+@media (min-width: 800px) and (max-width: 900px)  {
+    @media (min-height: 800px) and (max-height: 1400px) {
+        h2{
+            font-size: 1.5rem;
+        }
+        .header2{
+            font-size: 1.2rem;
+        }
+        .mercantil_pagomovil,
+        .mercantil,
+        .mercantil_busqueda {
+            max-height: 10vw; /* Ajusta la altura de la imagen en pantallas pequeñas */
+            width: auto;
+        }
+        .mercantil_busqueda{
+            margin-right: 5px;
+    
+        }
+
+        .busqueda_pagomovil_mibanco{
+            margin-right: 10px;
+        }
+
+        .pagomovil_mibanco,
+        .busqueda_pagomovil_mibanco{
+            max-height: 7vw; 
+            width: auto;
+        }
+        .credicard{
+            max-height: 12vw; /* Limita la altura máxima en relación al ancho de la pantalla */
+            width: auto;
+         }  
+
+    }
+    }
+@media (min-width: 901px) and (max-width: 1100px)  {
+    @media (min-height: 800px) and (max-height: 1400px) {
+        h2{
+            font-size: 1.6rem;
+        }
+       
+        .header2{
+            font-size: 1.4rem;
+        }
+        .mercantil_pagomovil,
+        .mercantil,
+        .mercantil_busqueda {
+            max-height: 8vw; /* Ajusta la altura de la imagen en pantallas pequeñas */
+            width: auto;
+        }
+        .mercantil_busqueda{
+            margin-right: 20px;
+        }
+
+ 
+        .busqueda_pagomovil_mibanco{
+            margin-right: 50px;
+        }
+
+        .pagomovil_mibanco,
+        .busqueda_pagomovil_mibanco{
+            max-height: 6vw; 
+            width: auto;
+        }
+        .credicard{
+            max-height: 10vw; /* Limita la altura máxima en relación al ancho de la pantalla */
+            width: auto;
+         }  
+
+    }
+    }
+
+
+.content2 {
+    overflow-y: auto; 
+    padding-right: 10px; 
+}
+
+
+.nav-bar {
+    width: 100%;
+    height: 60px;
+    gap: 0px;
+    opacity: 0px;
+    background: linear-gradient(90deg, var(--azul-mercantil) 0.96%, var(--azul-claro) 14.75%, var(--azul-mercantil) 37.06%);
+    display: flex;
+    align-items: center;
+
+    .nav-logo {
+        height: 80px;
+        margin-left: 10%;
+    }
+}
+
+.transaction-response {
+    box-shadow: 0px 4px 4px 0px #DDDCD8;
+    border: 1px solid #DFDFDF;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 8px;
+    max-width: 700px;
+    padding: 12px;
+    h2 {
+        color: var(--naranja);
+        padding: 0;
+        margin: 0;
+    }
+    p {
+        margin: 0;
+        margin-top: 12px;
+        padding: 0;
+        color: var(--azul-claro);
+        font-weight: bold;
+    }
+    a {
+        text-decoration: underline;
+        color: var(--azul-claro);
+        margin-top: 12px;
+        cursor: pointer;
+    }
+}
+
+/* Estilos de fieldset  para tdd */
+ fieldset {
+    border: none;
+    flex: 1 1 calc(5% - 5px); 
+    min-width: 150px; 
+}
+
+fieldset div {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    justify-content: flex-start; 
+ 
+}
+
+#customerid_autom,
+#card-number_autom{
+    padding: 10px;
+    border: 1px solid #333;
+    border-radius: 15px;
+    transition: border-color 0.3s;
+    font-size: 14px;
+    color: #333;
+    width: 100%; 
+    max-width: 200px; 
+}
+
+#customerid-prefix_autom{
+    padding: 10px;
+    border: 1px solid #333;
+    border-radius: 15px;
+    transition: border-color 0.3s;
+    font-size: 14px;
+    color: #333;
+}
+
+/*FIN DE FORMULARIO TDD_M*/
+
+#tdd_m {
+    background-color: white;
+    border-radius: 20px;
+    width: auto;
+    max-width: 60%;
+    display: flex;
+    flex-wrap: wrap; 
+    gap: 5px; 
+    margin: 0 auto; 
+}
+
+label {
+    font-weight: bold;
+    color: #555;
+    min-width: 150px;  /* Ancho mínimo para las etiquetas */
+    text-align: right;
+    margin-right: 10px;
+    font-size: 1rem;
+}
+
+/*tdd */
+
+.form-tdd {
+     background-color: white;
+    border-radius: 20px;
+    width: auto;
+    display: flex;
+    flex-wrap: wrap; 
+    gap: 5px; 
+    margin: 0 auto; 
+}
+
+
+#account-type,#amounttdd,#twofactortdd,#expiration-date,#cvv{
+    padding: 10px;
+    border: 1px solid #333;
+    border-radius: 15px;
+    transition: border-color 0.3s;
+    font-size: 14px;
+    color: #333;
+    width: 90%; 
+    max-width: 240px; 
+}
+
+/*PAGO MOVIL C2P MERCANTIL*/
+#c2pm {
+    background-color: white;
+    border-radius: 20px;
+    width: auto;
+    max-width: 60%;
+    display: flex;
+    flex-wrap: wrap; 
+    gap: 5px; 
+    margin: 0 auto; /* Agrega esta línea para centrar */
+    
+}
+#customerId,
+#amount,
+#customerPhoneNumber,
+#twofactor{
+    padding: 10px;
+    border: 1px solid #333;
+    border-radius: 15px;
+    transition: border-color 0.3s;
+    font-size: 14px;
+    color: #333;
+    width: 100%; 
+    max-width: 218px; 
+}
+
+
+#customerIdPrefix,
+#customerPhonePrefix{
+    padding: 10px;
+    border: 1px solid #333;
+    border-radius: 15px;
+    transition: border-color 0.3s;
+    font-size: 14px;
+    color: #333;
+}
+
+/*BUSQUEDA DE PAGO MOVIL/MERCANTIL*/
+
+#bqda_pago_movil_m{
+    background-color: white;
+    border-radius: 20px;
+    width: auto;
+    max-width: 60%;
+    display: flex;
+    flex-wrap: wrap; 
+    gap: 5px; 
+    margin: 0 auto; /* Agrega esta línea para centrar */
+}
+
+#customer-phone-number-prefix{
+    padding: 10px;
+    border: 1px solid #333;
+    border-radius: 15px;
+    transition: border-color 0.3s;
+    font-size: 14px;
+    color: #333;
+}
+
+#customer-phone-number,
+#paymentReference,
+#transaction-date,
+#amount2{
+    padding: 10px;
+    border: 1px solid #333;
+    border-radius: 15px;
+    transition: border-color 0.3s;
+    font-size: 14px;
+    color: #333;
+    width: 100%; 
+    max-width: 200px; 
+}
+
+/*FIN DE BUSQUEDA DE PAGO MOVIL/MERCANTIL*/
+
+/*OTP MI BANCO*/
+  
+.otp-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding-left:6vw; /* Empuja los botones hacia la derecha */
+}
+
+.otp-buttons .button {
+    width: 40%;
+    max-width: 200px;
+    margin: 0;
+}
+
+.otp-buttons .cancelar-btn {
+    background-color: #D9251D;
+    color: white;
+}
+
+#otp_mibanco{
+    background-color: white;
+    border-radius: 20px;
+    width: auto;
+    max-width: 60%;
+    display: flex;
+    flex-wrap: wrap; 
+    gap: 6px; 
+    margin: 0 auto; 
+}
+
+#Cedula{
+    padding: 10px;
+    border: 1px solid #333;
+    border-radius: 15px;
+    transition: border-color 0.3s;
+    font-size: 14px;
+    color: #333;
+    width: 100%; 
+    max-width: 200px; 
+}
+
+#Monto{
+    padding: 10px;
+    border: 1px solid #333;
+    border-radius: 15px;
+    transition: border-color 0.3s;
+    font-size: 14px;
+    text-align: right;
+    color: #333;
+    width: 100%; 
+    max-width: 220px;
+}
+#Banco{
+    padding: 10px;
+    border: 1px solid #333;
+    border-radius: 15px;
+    transition: border-color 0.3s;
+    font-size: 14px;
+    color: #333;
+    width: 100%; 
+    max-width: 300px;
+}
+
+#OTP{
+    padding: 10px;
+    border: 1px solid #333;
+    border-radius: 15px;
+    transition: border-color 0.3s;
+    font-size: 14px;
+    color: #333;
+    width: 100%; 
+    max-width: 200px; 
+}
+
+
+/*BUSQUEDA DE PAGO MOVIL/MIBANCO*/
+
+#consulta-form-bpm{
+    background-color: white;
+    border-radius: 20px;
+    width: auto;
+    max-width: 60%;
+    display: flex;
+    flex-wrap: wrap; 
+    gap: 5px; 
+    margin: 0 auto; /* Agrega esta línea para centrar */
+}
+
+#referencia_bpm,
+#customerPhoneNumberDestino{
+    padding: 10px;
+    border: 1px solid #333;
+    border-radius: 15px;
+    transition: border-color 0.3s;
+    font-size: 14px;
+    color: #333;
+    width: 100%; 
+    max-width: 200px; 
+}
+#customer-phone-number-destino{
+    padding: 10px;
+    border: 1px solid #333;
+    border-radius: 15px;
+    transition: border-color 0.3s;
+    font-size: 14px;
+    color: #333;
+}
+/*FIN DE BUSQUEDA DE PAGO MOVIL/MIBANCO*/
+
+/*CREDICARD*/
+
+#otp_contenedor {
+    display: flex;
+    justify-content: center;   
+    align-items: center;       
+    flex-direction: column;   
+    gap: 15px;
+    width: 100%;
+    text-align: center;        
+    margin-top: -5%;
+}
+
+#otp_input{
+    padding: 10px;
+    border: 1px solid #333;
+    border-radius: 15px;
+    transition: border-color 0.3s;
+    font-size: 14px;
+    color: #333;
+    width: 100%; 
+    max-width: 175px; 
+}
+
+#otpCustomerPhonePrefix{
+    padding: 10px;
+    border: 1px solid #333;
+    border-radius: 15px;
+    transition: border-color 0.3s;
+    font-size: 14px;
+    color: #333;
+}
+
+#otpCustomerPhoneNumber
+{
+    padding: 10px;
+    border: 1px solid #333;
+    border-radius: 15px;
+    transition: border-color 0.3s;
+    font-size: 14px;
+    color: #333;
+    width: 100%; 
+    max-width: 100px; 
+}
+
+#credicard_form{
+    background-color: white;
+    border-radius: 20px;
+    width: auto;
+    max-width: 60%;
+    display: flex;
+    flex-wrap: wrap; 
+    gap: 5px; 
+    margin: 0 auto; 
+}
+
+#card_type,
+#tipo_documento{
+    padding: 10px;
+    border: 1px solid #333;
+    border-radius: 15px;
+    transition: border-color 0.3s;
+    font-size: 14px;
+    color: #333;
+}
+
+.expiration-group {
+    display: flex;
+    align-items: center;
+    gap: 5px; /* Espacio entre los inputs y el separador "/" */
+}
+
+.expiration-group input {
+    padding: 10px;
+    border: 1px solid #333;
+    border-radius: 15px;
+    transition: border-color 0.3s;
+    font-size: 14px;
+    color: #333;
+    width: 40px; /* Ajustar ancho para los inputs */
+    text-align: center;
+}
+
+#card_number,
+#identificacion,
+#account_type,
+#pin{
+    padding: 10px;
+    border: 1px solid #333;
+    border-radius: 15px;
+    transition: border-color 0.3s;
+    font-size: 14px;
+    color: #333;
+    width: 100%; 
+    max-width: 200px; 
+}
+
+#holder_name,
+#cvc,
+#transaction_amount{
+    padding: 10px;
+    border: 1px solid #333;
+    border-radius: 15px;
+    transition: border-color 0.3s;
+    font-size: 14px;
+    color: #333;
+    width: 100%; 
+    max-width: 220px; 
+}
+/*FIN FORMULARIO CREDICARD*/
+
+.boton-enviar {
+    color: #090909;
+    padding: 0.7em 1.7em;
+    font-size: 16px;
+    border-radius: 0.5em;
+    background: #007aff;
+    cursor: pointer;
+    border: 1px solid #e8e8e8;
+    transition: all 0.3s;
+    box-shadow: 6px 6px 12px #c5c5c5, -6px -6px 12px #ffffff;
+    display: block;
+    position: relative;
+    margin: 1px auto;
+    max-width: 200px;
+    width: 100%;
+  }
+
+/* Botones */
+.button {
+    color: #090909;
+    padding: 0.7em 1.7em;
+    font-size: 16px;
+    border-radius: 0.5em;
+    background: #007aff;
+    cursor: pointer;
+    border: 1px solid #e8e8e8;
+    transition: all 0.3s;
+    box-shadow: 6px 6px 12px #c5c5c5, -6px -6px 12px #ffffff;
+    display: block; /* Permite centrar el botón */
+    position: relative;
+    margin: 1px auto; /* Centra el botón horizontalmente */
+    max-width: 200px; /* Ancho máximo del botón */
+    width: 100%; /* Ancho completo en pantallas pequeñas */
+  }
+  
+#otp_mibanco .button{
+    top: 10px;
+}
+
+
+.button:hover {
+    border: 1px solid white;
+  }
+  
+.button:active {
+    box-shadow: 4px 4px 12px #c5c5c5, -4px -4px 12px #ffffff;
+  }
+
+
+
+  @media (max-width: 1034px) {
+    #tdd_m, 
+    #c2pm, 
+    #bqda_pago_movil_m, 
+    #otp_mibanco,
+    #consulta-form-bpm,
+    #credicard_form{
+        max-width: 75%;
+    }
+  }
+
+  @media (max-width: 829px) {
+    #tdd_m, 
+    #c2pm, 
+    #bqda_pago_movil_m, 
+    #otp_mibanco,
+    #consulta-form-bpm,
+    #credicard_form{
+        max-width: 85%;
+    }
+  }
+
+  @media (max-width: 660px) {
+    #tdd_m, 
+    #c2pm, 
+    #bqda_pago_movil_m, 
+    #otp_mibanco,
+    #consulta-form-bpm,
+    #credicard_form{
+        max-width: 60%;
+    }
+  }
+
+  @media (max-width: 500px) {
+    #tdd_m, 
+    #c2pm, 
+    #bqda_pago_movil_m, 
+    #otp_mibanco,
+    #consulta-form-bpm,
+    #credicard_form{
+        max-width: 85%;
+    }
+    #otpField {
+        width: 100%;
+        max-width: 300px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        margin-top: 20px;
+        margin-left: 12%;
+    }
+  }
+    @media (max-width: 395px) {
+    #tdd_m, 
+    #c2pm, 
+    #bqda_pago_movil_m, 
+    #otp_mibanco,
+    #consulta-form-bpm,
+    #credicard_form{
+        max-width: 100%;
+    }
+}
+
+
+
+   @media (min-width: 1362px) {
+    #tdd_m, 
+    #c2pm, 
+    #bqda_pago_movil_m, 
+    #otp_mibanco,
+    #consulta-form-bpm,
+    #credicard_form   {
+        background-color: white;
+        border-radius: 20px;
+        width: auto;
+        max-width: 60%;
+        display: flex;
+        flex-wrap: wrap; 
+        gap: 5px; 
+        margin: 0 auto; /* Agrega esta línea para centrar */
+    }
+} 
+  @media (min-width: 1440px) {
+    #tdd_m, 
+    #c2pm, 
+    #bqda_pago_movil_m, 
+    #otp_mibanco,
+    #consulta-form-bpm,
+    #credicard_form   {
+        background-color: white;
+        border-radius: 20px;
+        width: auto;
+        max-width: 50%;
+        display: flex;
+        flex-wrap: wrap; 
+        gap: 5px; 
+        margin: 0 auto; 
+    }
+}
+
+@media (min-width: 1628px) {
+    #tdd_m,
+    #c2pm, 
+    #bqda_pago_movil_m, 
+    #otp_mibanco, 
+    #consulta-form-bpm,
+    #credicard_form   {
+        background-color: white;
+        border-radius: 20px;
+        width: auto;
+        max-width: 45%;
+        display: flex;
+        flex-wrap: wrap; 
+        gap: 5px; 
+        margin: 0 auto; /* Agrega esta línea para centrar */
+    }
+}
+
+@media (min-width: 1800px) {
+    #tdd_m,
+    #c2pm,
+    #bqda_pago_movil_m,
+    #otp_mibanco, 
+    #consulta-form-bpm,
+    #credicard_form {
+        background-color: white;
+        border-radius: 20px;
+        width: auto;
+        max-width: 40%;
+        display: flex;
+        flex-wrap: wrap; 
+        gap: 5px; 
+        margin: 0 auto; /* Agrega esta línea para centrar */
+    }
+}
+
+
+@media (min-width: 2032px) {
+    #tdd_m, 
+    #c2pm, 
+    #bqda_pago_movil_m, 
+    #otp_mibanco, 
+    #consulta-form-bpm,
+    #credicard_form {
+        background-color: white;
+        border-radius: 20px;
+        width: auto;
+        max-width: 35%;
+        display: flex;
+        flex-wrap: wrap; 
+        gap: 5px; 
+        margin: 0 auto; /* Agrega esta línea para centrar */
+    }
+}
+
+.hide {
+    display: none;
+}
+
+.error {
+    color: var(--error);
+}
+
+.scrollable-container {
+    max-height: none;
+    overflow: visible;
+}
+
+#response {
+    color: black;
+}
+
+#resultado_bpm {
+    color: black;
+}
+
+#session-expired-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+#session-expired-content {
+    background-color: white;
+    padding: 1%;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 90%; /* Usa un ancho relativo para pantallas pequeñas */
+    max-width: 300px; /* Limita el tamaño máximo en pantallas grandes */
+}
+
+#session-expired-message {
+    font-size: 1.2rem; /* Usa unidades relativas para escalabilidad */
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+#session-expired-buttons {
+    display: flex;
+    flex-wrap: wrap; /* Permite que los botones se ajusten en pantallas pequeñas */
+    justify-content: space-between;
+    gap: 10px; /* Espaciado entre botones */
+}
+
+.session-button {
+    flex: 1 1 calc(50% - 10px); /* Botones ocupan el 50% del espacio menos el gap */
+    background-color: #03519E;
+    color: white;
+    border: none;
+    padding: 10px;
+    font-size: 1rem; /* Escalable para pantallas pequeñas */
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    text-align: center;
+}
+
+.session-button:hover {
+    background-color: #01265C;
+}
+
+#logout-button {
+    background-color: #dc3545;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+#logout-button:hover {
+    background-color: #c82333;
+}
+
+/* Media queries para pantallas pequeñas */
+@media (max-width: 480px) {
+    #session-expired-content {
+        padding: 1%; /* Reduce el padding en pantallas pequeñas */
+        max-width: 250px; /* Limita el tamaño máximo en pantallas grandes */
+
+    }
+
+    #session-expired-message {
+        font-size: 1rem; /* Reduce el tamaño del texto */
+    }
+
+    .session-button {
+        flex: 1 1 100%; /* Los botones se apilan verticalmente */
+        padding: 8px;
+        font-size: 0.9rem; /* Ajusta el tamaño del texto del botón */
+    }
+}
+
+
+
+.flash-message-credicard {
+    color: rgba(255, 0, 0, 0.9);
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #ffffff;
+    padding: 10px;
+    border-radius: 10px;
+    z-index: 1000;
+    text-align: center;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.9);
+    width: 60%;
+    max-width: 360px; 
+}
+
+.flash-message-credicard.show {
+    display: block !important;
+}
+
+
+.flash-message-credicard.danger {
+    color: rgba(255, 0, 0, 0.9);
+    background-color: #ffffff;
+}
+.flash-message-credicard p {
+    color: rgba(255, 0, 0, 0.9);
+    font-size: 1.2rem; 
+}
+
+
+
+.flash-message {
+    color: rgba(255, 0, 0, 0.9);
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #ffffff;
+    padding: 10px;
+    border-radius: 10px;
+    z-index: 1000;
+    text-align: center;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.9);
+    width: 60%;
+    max-width: 360px; 
+    font-size: 1.2rem; 
+}
+
+.flash-message.show {
+    display: block !important;
+}
+
+
+
+.flash-message.error {
+    color: rgba(255, 0, 0, 0.9);
+    background-color: #ffffff;
+}
+
+.flash-message p {
+    color: rgba(255, 0, 0, 0.9);
+    font-size: 1.2rem; 
+}
+
+
+@media screen and (max-width: 768px) {
+    .flash-message {
+        width: 70%; 
+        padding: 8px;
+    }
+
+    .flash-message p {
+        font-size: 1rem;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .flash-message {
+        width: 60%; 
+        padding: 6px;
+    }
+
+    .flash-message p {
+        font-size: 0.9rem;
+    }
+}
+.container_info {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border: solid 2px #03519E;
+    border-radius: 10px;
+    width: 40%; 
+    max-width: 500px; 
+    min-width: 280px; 
+    margin: 0 auto; 
+    padding: 15px;
+    background-color: #e2e6ec;
+}
+
+h3 {
+    font-weight: bold;
+    color: #555;
+    font-size: 1rem; /* Ajuste dinámico */
+    width: 100%;
+    text-align: center;
+    margin: 10px 0;
+}
+
+p{
+    color: #090909;
+    font-size: 13px;
+}
+.info_item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f9f9f9;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+.copied {
+  display: none;
+  color: green;
+  margin-left: 8px;
+  user-select: none;
+  font-size: 10px;
+}
+.copy_icon {
+  cursor: pointer;
+  vertical-align: middle;
+  width: 20px;
+  height: 20px;
+  margin-left: 5px;
+}
+
+@media (max-width: 840px) {
+    h3{
+        margin-left: 10%;
+    }
+}
+/* ===========================
+   LOADER PANTALLA COMPLETA
+=========================== */
+
+#loaderOverlay{
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+
+    background: rgba(15,23,42,.65);
+    backdrop-filter: blur(6px);
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    visibility:hidden;
+    opacity:0;
+    transition:.35s ease;
+
+    z-index:999999;
+}
+
+#loaderOverlay.active{
+    visibility:visible;
+    opacity:1;
+}
+
+/* Tarjeta */
+
+.loader-content{
+
+    width:420px;
+    max-width:90%;
+
+    background:#ffffff;
+
+    border-radius:22px;
+
+    padding:45px 35px;
+
+    text-align:center;
+
+    box-shadow:
+        0 20px 60px rgba(0,0,0,.25);
+
+    animation: aparecer .35s ease;
+}
+
+/* Spinner */
+
+.spinner{
+
+    width:85px;
+    height:85px;
+
+    margin:auto;
+
+    border:8px solid #e5e7eb;
+    border-top:8px solid #0066cc;
+
+    border-radius:50%;
+
+    animation: spin .9s linear infinite;
+}
+
+/* Título */
+
+.loader-content h3{
+
+    margin-top:25px;
+    margin-bottom:12px;
+
+    font-size:24px;
+    color:#0f172a;
+}
+
+/* Texto */
+
+.loader-content p{
+
+    color:#64748b;
+
+    font-size:16px;
+
+    line-height:1.6;
+
+    margin:0;
+}
+
+/* Animaciones */
+
+@keyframes spin{
+
+    to{
+        transform:rotate(360deg);
+    }
+
+}
+
+@keyframes aparecer{
+
+    from{
+        opacity:0;
+        transform:scale(.92);
+    }
+
+    to{
+        opacity:1;
+        transform:scale(1);
+    }
+
+}
+
+    @media (max-height: 600px) {    
+        #logo {
+        width: 19%;
+        height: auto;
+        margin-top: -3%;
+        }
+        h1 {
+        font-size:150%;
+        }
+        form {
+        margin-top:-2%;
+        }
+        h2 {
+        font-size: 100%;
+        margin-top:-1%;
+        }
+        input[type="file"] {
+        margin-top:-1%;
+        }
+        input[type="text"],input[type="email"]{
+            height:2vh;
+        }
+        .btn-btn-primary {
+            height:6vh;
+        }
+        .container {
+            height:79vh;
+            margin-left:15px;
+        }
+    }
+    
+#closeFlashError{
+    background-color: rgba(255, 0, 0, 0.9);
+    cursor: pointer;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    padding: 5px 10px;   
+}

@@ -1,0 +1,38 @@
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/token_credicard.css') }}">
+  <title>Token Bancario</title>
+  <link rel="icon" href="{{ url_for('static', filename='img/logo_rojo_rescarven.png') }}" type="image/png">
+</head>
+<body>
+  <div class="container">
+    <h2>Validación Bancaria</h2>
+
+    <form method="post">
+      <input type="text" id="bank_token"name="bank_token" placeholder="Ingresar clave OTP del banco" maxlength="10" pattern="\d{1,10}" inputmode="numeric" oninput="this.value = this.value.replace(/\D/g, '').slice(0, 10)" required>
+      <input type="submit" value="Continuar pago">
+    </form>
+
+    <form method="post" id="solicitarTokenForm">
+      <input type="submit" value="Solicitar token" style="background-color:#D9251D;">
+    </form>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <p class="{{ category }}">{{ message }}</p>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+  </div>
+
+  <script>
+    const bancos_sin_solicitud = ["0114", "0169"];  // BANCARIBE y MI BANCO
+    const bank_code = "{{ bank_code }}";
+    if (bancos_sin_solicitud.includes(bank_code)) {
+      document.getElementById("solicitarTokenForm").style.display = "none";
+    }
+  </script>
+</body>
+</html>

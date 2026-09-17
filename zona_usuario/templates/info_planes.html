@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/info_poliza.css')}}">
+    <meta name="viewport" content="width=device-width, initial-width, initial-scale=1.0">
+    <title>Planes</title>
+    <link rel="icon" href="{{ url_for('static', filename='img/logo_rojo_rescarven.png') }}" type="image/png">
+</head>
+<body>
+    <div class="content">
+        <div class="sidebar">
+            <div class="logo">
+                <div class="menu-hamburguesa-container">
+                    <div class="menu-hamburguesa">&#9776;</div>
+                </div>
+                <img src="{{ url_for('static', filename='img/logo_rescarven.png') }}" alt="Logo" style="width:210px; height: 200px">
+            </div>
+            <nav class="menu" id="nav_menu">
+                <ul class="nav-list">
+                    <li><a href="{{url_for('paginaprincipal')}}">Inicio</a></li>
+                    <li class="active"><a href="{{url_for('info_planes')}}">Planes</a></li>
+                    <li><a href="{{url_for('recibo_de_pago')}}">Consultas</a></li>
+                </ul>
+            </nav>
+        </div>
+        <div class="container">
+
+            <div class="main-content">
+                <header class="top-bar">
+                    <div class="cerrar-sesion-contenedor">
+                        <img src="{{ url_for('static', filename='img/cerrar_sesion.png') }}" class="cerrar_sesion" alt="Cerrar sesión">
+                        <a id="salir" name="salir" class="salir" href="{{ url_for('logout') }}" oncontextmenu="return false;">Cerrar sesión</a>
+                    </div>
+                <div class="user-icon">
+                    <div class="dropdown">
+                        <div class="menu-button" onclick="toggleDropdown()">
+                            <img src="{{ url_for('static', filename='img/usuario.png') }}" alt="Usuario">
+                        </div>
+                        <div class="dropdown-content" id="dropdown-menu">
+                            <div class="user-name"> {{ nombre }} {{ apellido }}</div>
+                            <a href="{{ url_for('cambiar_contraseña') }}">Cambiar Contraseña</a>
+                        </div>
+                    </div>
+                </div>
+                </header>
+                <div class="contenido">
+                    <h1>Información de Planes de Salud</h1>
+                    <p>Selecciona el contrato a pagar:</p>
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                    <div id="flash-container">
+                    {% for category, message in messages %}
+                        {% if category == 'payment_success' and 'pasar por nuestras oficinas' in message %}
+                        <div class="success-message flash-message" id="flashMessageManual" style="display: none;">
+                            <h1>{{ message }}</h1>
+                            <button id="closeFlash" class="btn btn-primary btn-sm mt-2 closeFlashManual">Aceptar</button>
+                        </div>
+                        {% elif category == 'payment_success' %}
+                        <div class="success-message flash-message" id="flashMessageAuto" style="display: none; text-align: center;">
+                        <h1>{{ message }}</h1>
+
+                        <div>
+                            <img src="{{ url_for('static', filename='img/pagoaprobado.png') }}" alt="Pago aprobado" style="max-width: 100%; display: block; margin: 0 auto;" />
+                        </div>
+
+                        <div style="margin-top: 15px;">
+                            <button id="closeFlash" class="btn btn-primary btn-sm closeFlashAuto">Aceptar</button>
+                        </div>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                    </div>
+                        
+                    
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const mensajeAuto = document.getElementById("flashMessageAuto");
+    const mensajeManual = document.getElementById("flashMessageManual");
+
+    const botonCerrarAuto = document.querySelector(".closeFlashAuto");
+    const botonCerrarManual = document.querySelector(".closeFlashManual");
+
+    if (mensajeAuto) {
+        mensajeAuto.style.display = "block";
+
+        if (botonCerrarAuto) {
+            botonCerrarAuto.addEventListener("click", function () {
+                mensajeAuto.style.display = "none";
+
+                if (mensajeManual) {
+                    mensajeManual.style.display = "block";
+                }
+            });
+        }
+    } else if (mensajeManual) {
+        mensajeManual.style.display = "block";
+    }
+
+    if (botonCerrarManual) {
+        botonCerrarManual.addEventListener("click", function () {
+            mensajeManual.style.display = "none";
+        });
+    }
+});
+</script>
+{% endif %}
+{% endwith %}
+
+<form id="contratoForm" method="POST" action="{{ url_for('datos_polizas') }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <input type="hidden" name="contrato" id="contratoInput">
+    <input type="hidden" name="compania" id="companiaInput">
+    <input type="hidden" name="moneda" id="monedaInput">
+</form>
+
+{% if contratos_rmp %}
+    <h2>Nombre de la Empresa</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Fecha de Ingreso</th>
+                <th>Fecha de Vencimiento</th>
+                <th>Moneda</th>
+                <th>Número de Contrato</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for contrato in contratos_rmp %}
+            <tr class="clickable-row" 
+                data-contrato="{{ contrato.Nro_contrato }}" 
+                data-compania="{{ contrato.Compania }}" 
+                data-moneda="{{ contrato.Moneda }}">
+                <td data-label="Fecha de Solicitud">{{ contrato.Fecha_solicitud | default('', true) }}</td>
+                <td data-label="Fecha de Vencimiento">{{ contrato.Fecha_vencimiento | default('', true) }}</td>
+                <td data-label="Moneda">{{ contrato.Moneda | default('', true) }}</td>
+                <td data-label="Número de Contrato" class="raya">{{ contrato.Nro_contrato | default('', true) }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+
+{% if not contratos_rmp and not contratos_amb %}
+<div id="alert-container">
+    <img src="{{ url_for('static', filename='img/icerror.png') }}" id="alertimg">
+    <p>No se encontraron contratos para RMP ni AMB</p>
+</div>
+{% endif %}
+
+{% if contratos_amb %}
+    <h2>Ambulancias</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Fecha de Ingreso</th>
+                <th>Fecha de Vencimiento</th>
+                <th>Moneda</th>
+                <th>Número de Contrato</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for contrato in contratos_amb %}
+            <tr class="clickable-row" 
+                data-contrato="{{ contrato.Nro_contrato }}" 
+                data-compania="{{ contrato.Compania }}" 
+                data-moneda="{{ contrato.Moneda }}">
+                <td data-label="Fecha de Solicitud">{{ contrato.Fecha_solicitud | default('', true) }}</td>
+                <td data-label="Fecha de Vencimiento">{{ contrato.Fecha_vencimiento | default('', true) }}</td>
+                <td data-label="Moneda">{{ contrato.Moneda | default('', true) }}</td>
+                <td data-label="Número de Contrato" class="raya">{{ contrato.Nro_contrato | default('', true) }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+
+</div> 
+</div>
+</div>
+
+<div id="session-expired-modal">
+    <div id="session-expired-content">
+        <p id="session-expired-message">Tu tiempo de sesión ha expirado. ¿Quieres extenderla?</p>
+        <div id="session-expired-buttons">
+            <button class="session-button" onclick="extendSession()">Extender Sesión</button>
+            <button id="logout-button" class="session-button" onclick="logout()">Cerrar Sesión</button>
+        </div>
+    </div>
+</div>
+    
+    <script src="{{url_for('static', filename='js/info_planes.js')}}"></script>
+    <script src="{{url_for('static', filename='js/icusuario.js')}}"></script>
+</body>
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/tdd.css')}}">
+    <title>Pago con tarjeta de débito</title>
+    <link rel="icon" href="{{ url_for('static', filename='img/logo_rojo_rescarven.png') }}" type="image/png">
+</head>
+<body>
+   
+    <div class="main-container">
+        <h3>Pago con tarjeta de débito</h3>
+        <div id="flashMessage" class="flash-message">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        {% if category == 'payment_success' %}
+                            <p class="success">{{ message }}</p><br>
+                            <img src="{{ url_for('static', filename='img/pagoaprobado.png') }}" alt="Pago aprobado" class="flash-icon" style="height:45px; margin-top: -10px;">
+                        {% elif category == 'payment_error' %}
+                            <p class="error">{{ message }}</p><br>
+                            <img src="{{ url_for('static', filename='img/pagonegado.png') }}" alt="Pago negado" class="flash-icon" style="height:45px; margin-top: -10px;">
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            {% if request.args.get('error') %}
+                <div class="error">
+                    <p class="error-message">{{ request.args.get('error') }}</p><br>
+                    <img src="{{ url_for('static', filename='img/pagonegado.png') }}" alt="Error" class="flash-icon" style="height:45px; margin-top: -10px;">
+                </div>
+            {% endif %}
+        </div>
+        
+        <form action="/pay_amb" id="tdd_form" method="POST">
+            <fieldset>
+                <label for="customerid">Número de cédula</label>
+                <div>
+                    <select name="customerid-prefix" id="customerid-prefix">
+                        <option value="V" {% if customerid_prefix == "V" %}selected{% endif %}>V</option>
+                        <option value="J" {% if customerid_prefix == "J" %}selected{% endif %}>J</option>
+                        <option value="G" {% if customerid_prefix == "G" %}selected{% endif %}>G</option>
+                        <option value="P" {% if customerid_prefix == "P" %}selected{% endif %}>P</option>
+                        <option value="C" {% if customerid_prefix == "C" %}selected{% endif %}>C</option>
+                    </select>                    
+                    <input type="number" name="customerid" id="customerid" value="{{ customerid }}" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 9)"required />
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <label for="account-type">Tipo de cuenta</label><br>
+                <select name="account-type" id="account-type">
+                    <option value="CC" {% if account_type == 'CC' %}selected{% endif %}>Cuenta Corriente</option>
+                    <option value="CA" {% if account_type == 'CA' %}selected{% endif %}>Cuenta de Ahorros</option>
+                </select>
+            </fieldset>
+            <fieldset>
+                <label for="card-number">Número de tarjeta</label><br>
+                <input type="number" name="card-number" id="card-number" value="{{ card_number }}"oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 20)" required />
+            </fieldset>
+            <fieldset>
+                <label for="expiration-date">Fecha de expiración</label><br>
+                <input type="text" name="expiration-date" id="expiration-date" value="{{ expiration_date }}" required  placeholder="YYYY/MM" />
+            </fieldset>
+            <fieldset>
+                <label for="cvv">CVV</label><br>
+                <input type="text" name="cvv" id="cvv" value="{{ cvv }}" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0,4)" required />
+            </fieldset>
+            <fieldset>
+                <label for="amount">Monto</label><br>
+                <input type="text" name="amount" id="amount" value="{{ montobs }}" required readonly/>
+            </fieldset>
+            <fieldset>
+                <label for="invoice-number">Número de factura</label><br>
+                <input type="number" name="invoice-number" id="invoice-number" value="{{ invoice_number }}" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 20)" required />
+            </fieldset>
+            <fieldset>
+                <label for="twofactor">OTP</label><br>
+                <input type="number" name="twofactor" id="twofactor" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0,8)" required />
+            </fieldset>
+            <button class="button" type="submit">Enviar</button>
+        </form>
+        
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const flashMessage = document.getElementById("flashMessage");
+                if (flashMessage && flashMessage.innerHTML.trim() !== "") {
+                    flashMessage.style.display = "block"; // Muestra el mensaje flash
+                    setTimeout(function() {
+                        flashMessage.style.display = "none"; // Oculta el mensaje después de 5 segundos
+                    }, 5000); // 5000 milisegundos (5 segundos)
+                }
+            });
+        </script>
+    <script src="{{url_for('static', filename='js/icusuario.js')}}"></script>
+    <script src="{{url_for('static', filename='js/tdd.js')}}"></script>
+    <script>
+        // Función para enviar mensaje a la ventana principal
+        function notifyParentAndClose(message) {
+            if (window.opener) {
+                window.opener.postMessage({ status: "approved", message }, "*");
+            }
+            window.close(); // Cerrar la ventana emergente
+        }
+    
+        // Capturar el resultado de la respuesta del servidor después del formulario
+        document.addEventListener("DOMContentLoaded", () => {
+            // Verificar si hay un mensaje de éxito en los parámetros de la URL
+            const params = new URLSearchParams(window.location.search);
+            const approvedMessage = params.get("mensaje");
+    
+            if (approvedMessage) {
+                // Si hay un mensaje de éxito, notificar a la ventana principal y cerrar
+                notifyParentAndClose(approvedMessage);
+            }
+        });
+    </script> 
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const expirationInput = document.getElementById("expiration-date");
+        
+            expirationInput.addEventListener("input", function (event) {
+                let value = expirationInput.value.replace(/\D/g, ""); // Elimina caracteres no numéricos
+                let cursorPosition = expirationInput.selectionStart; // Guarda la posición del cursor
+                let isDeleting = event.inputType === "deleteContentBackward";
+        
+                // Si el usuario está borrando justo después de la barra, permitimos eliminarla sin problemas
+                if (isDeleting && cursorPosition === 6) {
+                    value = value.slice(0, 4); // Elimina el MM al borrar justo después de la barra
+                } else if (value.length > 6) {
+                    value = value.slice(0, 6); // Limita a YYYYMM
+                }
+        
+                // Insertar la barra automáticamente solo si hay al menos 4 caracteres
+                if (value.length > 4) {
+                    value = value.slice(0, 4) + "/" + value.slice(4);
+                }
+        
+                expirationInput.value = value;
+        
+                // Ajustar la posición del cursor para evitar que se mueva al final
+                if (isDeleting && cursorPosition === 6) {
+                    expirationInput.setSelectionRange(5, 5);
+                } else if (cursorPosition === 5 && !isDeleting) {
+                    expirationInput.setSelectionRange(6, 6);
+                } else {
+                    expirationInput.setSelectionRange(cursorPosition, cursorPosition);
+                }
+            });
+        });        
+    </script>  
+</body>
+</html>
