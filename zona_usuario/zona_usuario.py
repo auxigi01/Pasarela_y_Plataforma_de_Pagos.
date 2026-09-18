@@ -62,7 +62,6 @@ load_dotenv()
 app = Flask(__name__, template_folder='templates')
 
 
-
 limiter = Limiter(
     key_func=get_remote_address,
     app=app,
